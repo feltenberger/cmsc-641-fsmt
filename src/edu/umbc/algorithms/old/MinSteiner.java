@@ -6,11 +6,14 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author dave
  *
  */
 public class MinSteiner extends JPanel implements Runnable {
+	private static transient final Logger log = Logger.getLogger(MinSteiner.class);
 	private static final long serialVersionUID = 1268750618801149582L;
 	/**
 	 * the thread that calculates all the steiner points
@@ -553,9 +556,11 @@ public class MinSteiner extends JPanel implements Runnable {
 		avgX = (x1[mij1] + x1[mij2] + steinerX) / 3.0;
 		// average the first, second, and steiner points' y-coord
 		avgY = (y1[mij1] + y1[mij2] + steinerY) / 3.0;
+		//log.info("avgx = " + avgX + ", avgy = " + avgY);
 
 		// calculate the distance from the first point to the midpoint
 		distToMidpoint = euclideanDistance(x1[mij1], y1[mij1], avgX, avgY);
+		//log.info("dist to midpoint: " + distToMidpoint);
 
 		// adjust all the points' coordinates by the average
 		x1[mij1] = x1[mij1] - avgX;
@@ -565,14 +570,17 @@ public class MinSteiner extends JPanel implements Runnable {
 		x1[mij3] = x1[mij3] - avgX;
 		y1[mij3] = y1[mij3] - avgY;
 
+		//log.info("steinerX = " + steinerX + ", y = " + steinerY);
 		// same for the steiner point...
 		steinerX = steinerX - avgX;
 		steinerY = steinerY - avgY;
+		//log.info("steinerX = " + steinerX + ", y = " + steinerY);
 
 		// calculate the slope of the line from the third point to the steiner point
 		an = (y1[mij3] - steinerY) / (x1[mij3] - steinerX);
 		// dunno what this is...
 		bn = steinerY - an * steinerX;
+		//log.info("an = " + an + ", bn = " + bn);
 
 		// if the steiner point's x coord is to the left of the third point's coord
 		// do {whatever the hell it's doing} to add a new steiner node at the end of the array of points
@@ -592,6 +600,8 @@ public class MinSteiner extends JPanel implements Runnable {
 					/ (1.0 + an * an)
 					+ 0.0001
 					* Math.cos(Math.PI * 2.0 * Math.random());
+			if(x1[steinerIndex] > 999999.9999)
+				System.out.println(x1[steinerIndex]);
 			y1[steinerIndex] = an * x1[steinerIndex] + bn + 0.0001
 					* Math.sin(Math.PI * 2.0 * Math.random());
 			isSteinerNode[steinerIndex] = 1;
@@ -606,7 +616,12 @@ public class MinSteiner extends JPanel implements Runnable {
 		steinerY = steinerY + avgY;
 		x1[steinerIndex] = x1[steinerIndex] + avgX;
 		y1[steinerIndex] = y1[steinerIndex] + avgY;
+		//if(num == 20)
+		//	System.exit(0);
+		//num++;
+		//log.info("-----------------------------------");
 	}// msbn2
+	//private static int num = 0;
 
 	private void tase1(int it1) {
 		int qint;
@@ -969,10 +984,13 @@ public class MinSteiner extends JPanel implements Runnable {
 	 * start the background thread
 	 */
 	public void start() {
+		/*
 		if (computationThread == null) {
 			computationThread = new Thread(this);
 			computationThread.start();
 		}
+		*/
+		run();
 	}
 
 	/**
@@ -980,9 +998,11 @@ public class MinSteiner extends JPanel implements Runnable {
 	 */
 	@SuppressWarnings("all")
 	public void stop() {
+		/*
 		if (computationThread != null) {
 			computationThread.stop();
 			computationThread = null;
 		}
+		*/
 	}
 }

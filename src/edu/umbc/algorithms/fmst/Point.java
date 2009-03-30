@@ -75,4 +75,10 @@ public class Point implements Serializable {
 		double half_pi = Math.PI / 2;
 		this.w = Math.asin((y - 0.0) / GraphUtils.euclideanDistance(x, y, 0.0, 0.0)) + half_pi;
 	}
+	/**
+	 * @return
+	 */
+	public boolean isSteiner() {
+		return this.steiner > 0;
+	}
 }
