@@ -1,4 +1,4 @@
-package edu.umbc.algorithms.fmst;
+package edu.umbc.algorithms.old;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,6 +10,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
+
+import edu.umbc.algorithms.fmst.Edge;
+import edu.umbc.algorithms.fmst.Point;
+import edu.umbc.algorithms.fmst.util.GraphUtils;
 
 /**
  * A Fair Minimum Steiner Tree.

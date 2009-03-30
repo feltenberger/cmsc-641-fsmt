@@ -6,19 +6,17 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author dave
  *
  */
-public class MinSteiner extends JPanel implements Runnable {
-	private static transient final Logger log = Logger.getLogger(MinSteiner.class);
+public class MinSteiner extends JPanel {
+	//private static transient final Logger log = Logger.getLogger(MinSteiner.class);
 	private static final long serialVersionUID = 1268750618801149582L;
 	/**
 	 * the thread that calculates all the steiner points
-	 */
 	private transient Thread computationThread;
+	 */
 
 	/**
 	 * the colors associated with drawing the canvas
