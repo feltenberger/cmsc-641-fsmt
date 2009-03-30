@@ -10,6 +10,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
+
 import edu.umbc.algorithms.fmst.Edge;
 import edu.umbc.algorithms.fmst.GraphUtils;
 import edu.umbc.algorithms.fmst.Point;
@@ -20,11 +22,11 @@ import edu.umbc.algorithms.fmst.Point;
  */
 public class FairSMT extends JPanel implements Runnable {
 	private static final long serialVersionUID = 1268750618801149582L;
-	//private static final transient Logger log = Logger.getLogger(FairSMT.class);
+	private static final transient Logger log = Logger.getLogger(FairSMT.class);
 	/**
 	 * the thread that calculates all the steiner points
 	 */
-	private transient Thread computationThread;
+	//private transient Thread computationThread;
 
 	/**
 	 * the colors associated with drawing the canvas
@@ -64,7 +66,7 @@ public class FairSMT extends JPanel implements Runnable {
 	/**
 	 * total number of nodes, including steiner nodes.
 	 */
-	private int numNodesIncludingSteiner;
+	//private int this.points.size();
 	/**
 	 * part of the number of convex hull nodes 
 	 */
@@ -83,6 +85,7 @@ public class FairSMT extends JPanel implements Runnable {
 	/**
 	 * all the points in the graph
 	 */
+	//private List<Point> points = new ArrayList<Point>();
 	private List<Point> points = Collections.synchronizedList(new ArrayList<Point>());
 	/**
 	 * a secondary array for temporary storage
@@ -192,6 +195,8 @@ public class FairSMT extends JPanel implements Runnable {
 	private void e1(int index, int value) {
 		if(index < this.edges.size())
 			this.edges.get(index).index1 = value;
+		else
+			getClass();
 		//this.e1[index] = value;
 	}
 	private int e2(int index) {
@@ -203,6 +208,8 @@ public class FairSMT extends JPanel implements Runnable {
 	private void e2(int index, int value) {
 		if(index < this.edges.size())
 			this.edges.get(index).index2 = value;
+		else
+			getClass();
 		//this.e2[index] = value;
 	}
 
@@ -217,6 +224,7 @@ public class FairSMT extends JPanel implements Runnable {
 		else
 			this.secondaryPoints.set(index, p.copy());
 	}
+
 	/**
 	 * gets the x2 value
 	 * @param index
@@ -329,7 +337,7 @@ public class FairSMT extends JPanel implements Runnable {
 
 			// sort by the w-values, whatever they are...
 			//GraphUtils.sort(w1, x1, y1, numNonSteinerNodes);
-			GraphUtils.sortByWeight(points);
+			GraphUtils.sortByWeight(points, false);
 
 			lto = x(0);
 			if (firstNodeIsMaxX == 0) {
@@ -375,9 +383,9 @@ public class FairSMT extends JPanel implements Runnable {
 		int cv[][] = new int[200][200];
 		int edgeIndex = 0;
 		int count = 0;
-		for (int imst = 0; imst < numNodesIncludingSteiner - 1; imst++) {
+		for (int imst = 0; imst < this.points.size() - 1; imst++) {
 			if (isSteiner(imst) < 2) {
-				for (int jmst = imst + 1; jmst < numNodesIncludingSteiner; jmst++) {
+				for (int jmst = imst + 1; jmst < this.points.size(); jmst++) {
 					if (isSteiner(jmst) < 2) {
 						ei[count] = imst + 0.0;
 						ej[count] = jmst + 0.0;
@@ -393,7 +401,7 @@ public class FairSMT extends JPanel implements Runnable {
 		GraphUtils.sort(edgeDistances, ei, ej, count);
 
 		// initialize all the cn array to 0.
-		for (int i = 0; i < numNodesIncludingSteiner; i++) {
+		for (int i = 0; i < this.points.size(); i++) {
 			cn[i] = 0;
 		}
 		for (int i = 0; i < count; i++) {
@@ -466,7 +474,7 @@ public class FairSMT extends JPanel implements Runnable {
 	 */
 	private double totalTreeLength() {
 		double total = 0.0;
-		for (int i = 0; i < numNodesIncludingSteiner - 1; i++) {
+		for (int i = 0; i < this.points.size() - 1; i++) {
 			total = total + GraphUtils.euclideanDistance(x(e1(i)), y(e1(i)), x(e2(i)), y(e2(i)));
 			//total = total + euclideanDistance(x(e1(i)), y(e1[i]), x(e2[i]), y(e2[i]));
 		}
@@ -477,39 +485,49 @@ public class FairSMT extends JPanel implements Runnable {
 	private void bohe() {
 		int numTotalNodesTemp;
 
-		// copy arrays from x1 to x2
-		for(int hi = numNonSteinerNodes; hi < numNodesIncludingSteiner; hi++) {
-			copyPointToSecondary(hi);
-			/*
-			x2(hi, x(hi));
-			y2(hi, y(hi));
-			*/
-			cn[hi] = cn[hi];
+		synchronized(points) {
+			// copy arrays from x1 to x2
+			for(int i = numNonSteinerNodes; i < this.points.size(); i++) {
+				copyPointToSecondary(i);
+				cn[i] = cn[i];
+			}
+	
+			// i thinks this is saying that if this is a steiner node and it's on the
+			// convex hull, make the steiner value 2 so we can remove it below
+			for(int i = numNonSteinerNodes; i < this.points.size(); i++) {
+				if (isSteiner(i) == 1 && cn[i] != 3) {
+					setSteiner(i, 2);
+					//isSteinerNode[hi] = 2;
+				}// sl[i]==1 && cn[i]<3
+			}// wend i
+	
+			// here we remove any steiner nodes with values higher than 1
+			numTotalNodesTemp = numNonSteinerNodes;
+			for(int i = numNonSteinerNodes; i < this.points.size(); i++) {
+				if (isSteiner(i) == 1) {
+					//x1[numTotalNodesTemp] = x2(hi);
+					x(numTotalNodesTemp, x2(i));
+					//y1[numTotalNodesTemp] = y2(hi);
+					y(numTotalNodesTemp, y2(i));
+					cn[numTotalNodesTemp] = cn2[i];
+					numTotalNodesTemp++;
+				}// sl[hi]==1
+			}// i
+	
+			if(numTotalNodesTemp < this.points.size()) {
+				while(numTotalNodesTemp < this.points.size()) {
+					// keep plucking values off the end
+					this.points.remove(this.points.size()-1);
+				}
+				//log.info("gotta remove some nodes!");
+			}
+
+			//this.points.size() = numTotalNodesTemp;
+			for(int hi = numNonSteinerNodes; hi < this.points.size(); hi++) {
+				setSteiner(hi, 1);
+			}
 		}
 
-		// 
-		for(int hi = numNonSteinerNodes; hi < numNodesIncludingSteiner; hi++) {
-			if (isSteiner(hi) == 1 && cn[hi] != 3) {
-				setSteiner(hi, 2);
-				//isSteinerNode[hi] = 2;
-			}// sl[i]==1 && cn[i]<3
-		}// wend hi
-
-		numTotalNodesTemp = numNonSteinerNodes;
-		for(int hi = numNonSteinerNodes; hi < numNodesIncludingSteiner; hi++) {
-			if (isSteiner(hi) == 1) {
-				//x1[numTotalNodesTemp] = x2(hi);
-				x(numTotalNodesTemp, x2(hi));
-				//y1[numTotalNodesTemp] = y2(hi);
-				y(numTotalNodesTemp, y2(hi));
-				cn[numTotalNodesTemp] = cn2[hi];
-				numTotalNodesTemp++;
-			}// sl[hi]==1
-		}// hi
-		numNodesIncludingSteiner = numTotalNodesTemp;
-		for(int hi = numNonSteinerNodes; hi < numNodesIncludingSteiner; hi++) {
-			setSteiner(hi, 1);
-		}
 	}// bohe
 
 	/**
@@ -520,7 +538,7 @@ public class FairSMT extends JPanel implements Runnable {
 	 */
 	private void computeSteinerPoint(int ij1, int ij2, int ij3) {
 		double ka, se, xz, yz;
-		double one_third_pi = Math.PI / 3.0;
+		final double one_third_pi = Math.PI / 3.0;
 
 		ka = (y(ij2) - y(ij1)) / (x(ij2) - x(ij1));
 		se = y(ij1) - ka * x(ij1);
@@ -556,8 +574,8 @@ public class FairSMT extends JPanel implements Runnable {
 	 * @param mij3
 	 */
 	private void addSteinerNodeToGraph(int mij1, int mij2, int mij3) {
-		addSteinerNodeToGraph(numNodesIncludingSteiner, mij1, mij2, mij3);
-		numNodesIncludingSteiner++;
+		addSteinerNodeToGraph(this.points.size(), mij1, mij2, mij3);
+		//this.points.size()++;
 	}// addSteinerNodeToGraph
 
 	/**
@@ -579,9 +597,11 @@ public class FairSMT extends JPanel implements Runnable {
 		avgX = (x(mij1) + x(mij2) + steinerX) / 3.0;
 		// average the first, second, and steiner points' y-coord
 		avgY = (y(mij1) + y(mij2) + steinerY) / 3.0;
+		log.debug("avgx = " + avgX + ", avgy = " + avgY);
 
 		// calculate the distance from the first point to the midpoint
 		distToMidpoint = GraphUtils.euclideanDistance(x(mij1), y(mij1), avgX, avgY);
+		log.debug("dist to midpoint: " + distToMidpoint);
 
 		// adjust all the points' coordinates by the average
 		x(mij1, x(mij1) - avgX);
@@ -591,43 +611,57 @@ public class FairSMT extends JPanel implements Runnable {
 		x(mij3, x(mij3) - avgX);
 		y(mij3, y(mij3) - avgY);
 
+		log.debug("steinerX = " + steinerX + ", y = " + steinerY);
 		// same for the steiner point...
 		steinerX = steinerX - avgX;
 		steinerY = steinerY - avgY;
+		log.debug("steinerX = " + steinerX + ", y = " + steinerY);
 
 		// calculate the slope of the line from the third point to the steiner point
 		an = (y(mij3) - steinerY) / (x(mij3) - steinerX);
 		// dunno what this is...
 		bn = steinerY - an * steinerX;
+		log.debug("an = " + an + ", bn = " + bn);
 
 		// if the steiner point's x coord is to the left of the third point's coord
 		// do {whatever the hell it's doing} to add a new steiner node at the end of the array of points
 		if (steinerX < x(mij3)) {
-			double tmp =  (-an * bn + Math.pow(an * an * bn * bn
+			double x =  (-an * bn + Math.pow(an * an * bn * bn
 					- (bn * bn - distToMidpoint * distToMidpoint) * (1.0 + an * an), 0.5))
 					/ (1.0 + an * an)
 					+ 0.0001
 					* Math.cos(Math.PI * 2.0 * Math.random());
-			x(steinerIndex, tmp);
 
-			tmp = an * x(steinerIndex) + bn + 0.0001
-			* Math.sin(Math.PI * 2.0 * Math.random());
-			y(steinerIndex, tmp);
+			// add a steiner point if we're at the end of the array.
+			if(steinerIndex == this.points.size())
+				this.points.add(new Point(0.0, 0.0));
+
+			x(steinerIndex, x);
+
+			double y = an * x(steinerIndex) + bn + 0.0001 * Math.sin(Math.PI * 2.0 * Math.random());
+			y(steinerIndex, y);
+			log.debug("x = " + x + ", y = " + y);
 
 			//isSteinerNode[steinerIndex] = 1;
 			setSteiner(steinerIndex, 1);
 		} else {
 			// otherwise, do something different to add the steiner node at the end of the array of points
-			double tmp = (-an * bn - Math.pow(an * an * bn * bn
+			double x = (-an * bn - Math.pow(an * an * bn * bn
 					- (bn * bn - distToMidpoint * distToMidpoint) * (1.0 + an * an), 0.5))
 					/ (1.0 + an * an)
 					+ 0.0001
 					* Math.cos(Math.PI * 2.0 * Math.random());
-			x(steinerIndex, tmp);
 
-			tmp = an * x(steinerIndex) + bn + 0.0001
-			* Math.sin(Math.PI * 2.0 * Math.random());
-			y(steinerIndex, tmp);
+			// add a steiner point if we're at the end of the array.
+			if(steinerIndex == this.points.size())
+				this.points.add(new Point(0.0, 0.0));
+
+			x(steinerIndex, x);
+
+			double y = an * x(steinerIndex) + bn + 0.0001 * Math.sin(Math.PI * 2.0 * Math.random());
+			y(steinerIndex, y);
+
+			log.debug("x = " + x + ", y = " + y);
 
 			setSteiner(steinerIndex, 1);
 		}
@@ -643,7 +677,12 @@ public class FairSMT extends JPanel implements Runnable {
 
 		x(steinerIndex, x(steinerIndex) + avgX);
 		y(steinerIndex, y(steinerIndex) + avgY);
+		//if(num == 20)
+		//	System.exit(20);
+		//num++;
+		log.debug("-----------------------------------");
 	}
+	//private static int num = 0;
 
 	private void tase1(int it1) {
 		int qint;
@@ -715,7 +754,7 @@ public class FairSMT extends JPanel implements Runnable {
 					tase1(it);
 					mst();
 					hantei();
-					if (numNodesIncludingSteiner > 2 * numNonSteinerNodes - 2) {
+					if (this.points.size() > 2 * numNonSteinerNodes - 2) {
 						break;
 					}
 				}// cn[it]==3
@@ -738,7 +777,7 @@ public class FairSMT extends JPanel implements Runnable {
 						tase2(i);
 						mst();
 						hantei();
-						if (numNodesIncludingSteiner > 2 * numNonSteinerNodes - 2) {
+						if (this.points.size() > 2 * numNonSteinerNodes - 2) {
 							break;
 						}
 					}// qw>2.0*pi/3.0
@@ -766,7 +805,7 @@ public class FairSMT extends JPanel implements Runnable {
 		while (tlabel == 0) {
 			tra++;
 			int ter = 0;
-			for (int i = numNonSteinerNodes; i < numNodesIncludingSteiner; i++) {
+			for (int i = numNonSteinerNodes; i < this.points.size(); i++) {
 				if (cn[i] == 3) {
 					xx = x(connect[i][0]);
 					yy = y(connect[i][0]);
@@ -841,11 +880,11 @@ public class FairSMT extends JPanel implements Runnable {
 				}
 
 				// update the number of nodes in SMT
-				numNodesInSMT = numNodesIncludingSteiner;
+				numNodesInSMT = this.points.size();
 	
 				// copy over all the edges
 				this.minEdges = Collections.synchronizedList(new ArrayList<Edge>());
-				for (int i = 0; i < numNodesIncludingSteiner - 1; i++) {
+				for (int i = 0; i < this.points.size() - 1; i++) {
 					this.minEdges.add(this.edges.get(i).copy());
 				}
 			}
@@ -859,7 +898,9 @@ public class FairSMT extends JPanel implements Runnable {
 
 		// sort the points by the x-coordinate.
 		//GraphUtils.sort(x1, y1, w1, numNonSteinerNodes);
-		GraphUtils.sortByX(points);
+		GraphUtils.sortByX(points, false);
+		List<Point> originalPoints = new ArrayList<Point>();
+		originalPoints.addAll(points);
 
 		// copy all the points to the secondary points
 		for (int k = 0; k < numNonSteinerNodes; k++) {
@@ -879,24 +920,26 @@ public class FairSMT extends JPanel implements Runnable {
 
 			repaintIfNecessary();
 
-			int steinerCount = 0;
-			numNodesIncludingSteiner = numNonSteinerNodes;
+			//int steinerCount = 0;
+			// this.points.size() = numNonSteinerNodes;
+			points.clear();
+			points.addAll(originalPoints);
 			for (int k = 0; k < numNonSteinerNodes - 2; k++) {
 				if (Math.random() < 0.5) {
 					int chrule = 0;
 					int br2;
-					double x1kouho = 0.0, y1kouho = 0.0;
+					double randX = 0.0, randY = 0.0;
 					while (chrule == 0) {
-						x1kouho = Math.random() * (width - 30) + 15;
-						y1kouho = Math.random() * (height - 30) + 15;
+						randX = Math.random() * (width - 30) + 15;
+						randY = Math.random() * (height - 30) + 15;
 						br2 = 0;
 						for (int h = 0; h < coch; h++) {
-							if (y1kouho > aa[h] * x1kouho + bb[h]) {
+							if (randY > aa[h] * randX + bb[h]) {
 								br2 = 1;
 							}
 						}
 						for (int h = 0; h < coch2; h++) {
-							if (y1kouho < aa2[h] * x1kouho + bb2[h]) {
+							if (randY < aa2[h] * randX + bb2[h]) {
 								br2 = 1;
 							}
 						}
@@ -905,15 +948,15 @@ public class FairSMT extends JPanel implements Runnable {
 						}
 					}// chrule
 
-					Point p = new Point(x1kouho, y1kouho);
+					Point p = new Point(randX, randY);
 					p.steiner = 1;
 					this.points.add(p);
 					//x(numNonSteinerNodes + steinerCount, x1kouho);
 					//y(numNonSteinerNodes + steinerCount, y1kouho);
 					//setSteiner(numNonSteinerNodes + steinerCount, 1);
 
-					steinerCount++;
-					numNodesIncludingSteiner = numNonSteinerNodes + steinerCount;
+					//steinerCount++;
+					//this.points.size() = numNonSteinerNodes + steinerCount;
 				}
 			}
 
@@ -963,15 +1006,17 @@ public class FairSMT extends JPanel implements Runnable {
 		g.setColor(bgColor);
 		g.fillRect(1, 1, width, height);
 
-		// draw the lines of each edge
-		// note that this will not actually show up on the canvas since the bgcolor is still the active color.
-		for (int i = 0; i < numNodesIncludingSteiner - 1; i++) {
-			g.drawLine((int) x(e1(i)), (int) y(e1(i)), (int) x(e2(i)),
-					(int) y(e2(i)));
-		}
-
 		// had concurrency issues, so synchronize the entire shebang here
 		synchronized(this) {
+			/*
+			// draw the lines of each edge
+			// note that this will not actually show up on the canvas since the bgcolor is still the active color.
+			for (int i = 0; i < this.points.size() - 1; i++) {
+				g.drawLine((int) x(e1(i)), (int) y(e1(i)), (int) x(e2(i)),
+						(int) y(e2(i)));
+			}
+			*/
+
 			// draw all of the nodes.  if it's a steiner node, make it a square; otherwise, a circle.
 			g.setColor(nodeColor);
 			for (int i = 0; i < numNodesInSMT; i++) {
@@ -1022,21 +1067,26 @@ public class FairSMT extends JPanel implements Runnable {
 	 * start the background thread
 	 */
 	public void start() {
+		/*
 		if (computationThread == null) {
 			computationThread = new Thread(this);
 			computationThread.start();
 		}
+		*/
+		run();
 	}
 
 	/**
 	 * stop the background thread
-	 */
 	@SuppressWarnings("all")
+	 */
 	public void stop() {
+		/*
 		if (computationThread != null) {
 			computationThread.stop();
 			computationThread = null;
 		}
+		*/
 	}
 
 	/**

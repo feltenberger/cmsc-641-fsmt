@@ -59,11 +59,11 @@ public class StartHereFairSMT {
 		JFrame f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		ms.start();
 
 		f.add(ms);
 		f.pack();
 		f.setVisible(true);
+		ms.start();
 	}
 
 	/**

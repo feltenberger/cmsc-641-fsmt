@@ -59,8 +59,26 @@ public class GraphUtils {
 	 * @param points
 	 */
 	public static void sortByWeight(List<Point> points) {
+		sortByX(points, true);
+	}
+
+	/**
+	 * sort the points by their weight.
+	 * @param points
+	 */
+	public static void sortByWeight(List<Point> points, final boolean includeSteinerNodes) {
 		Collections.sort(points, new Comparator<Point>() {
 			public int compare(Point o1, Point o2) {
+				// if we shouldn't include steiner nodes, then always push them to the right/end of the array.
+				if(!includeSteinerNodes) {
+					if(o1.isSteiner() && !o2.isSteiner())
+						return 1;
+					else if(o1.isSteiner() && o2.isSteiner())
+						return 0;
+					else if(!o1.isSteiner() && o2.isSteiner())
+						return -1;
+				}
+
 				if(o1.w < o2.w)
 					return -1;
 				else if(o1.w > o2.w)
@@ -69,9 +87,23 @@ public class GraphUtils {
 			}
 		});
 	}
-	public static void sortByX(List<Point> points) {
+
+	/**
+	 * sort the points by the x value.
+	 * @param points
+	 * @param includeSteinerNodes
+	 */
+	public static void sortByX(List<Point> points, final boolean includeSteinerNodes) {
 		Collections.sort(points, new Comparator<Point>() {
 			public int compare(Point o1, Point o2) {
+				if(!includeSteinerNodes) {
+					if(o1.isSteiner() && !o2.isSteiner())
+						return 1;
+					else if(o1.isSteiner() && o2.isSteiner())
+						return 0;
+					else if(!o1.isSteiner() && o2.isSteiner())
+						return -1;
+				}
 				if(o1.x < o2.x)
 					return -1;
 				else if(o1.x > o2.x)
