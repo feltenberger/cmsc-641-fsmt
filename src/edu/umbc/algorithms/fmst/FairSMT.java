@@ -1,4 +1,4 @@
-package edu.umbc.algorithms.old;
+package edu.umbc.algorithms.fmst;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,9 +12,8 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
-import edu.umbc.algorithms.fmst.Edge;
-import edu.umbc.algorithms.fmst.GraphUtils;
-import edu.umbc.algorithms.fmst.Point;
+import edu.umbc.algorithms.fmst.util.GraphUtils;
+
 
 /**
  * @author dave
@@ -26,7 +25,7 @@ public class FairSMT extends JPanel implements Runnable {
 	/**
 	 * the thread that calculates all the steiner points
 	 */
-	//private transient Thread computationThread;
+	private transient Thread computationThread;
 
 	/**
 	 * the colors associated with drawing the canvas
@@ -81,11 +80,22 @@ public class FairSMT extends JPanel implements Runnable {
 	 * the current minimum tree length
 	 */
 	private double minTreeLen;
+	/**
+	 * is this SMT running?
+	 */
+	private boolean isRunning = false;
+	/**
+	 * has this SMT run already?
+	 */
+	private boolean hasRun = false;
 
+	/**
+	 * the original points from the graph -- added once in the run method.
+	 */
+	private List<Point> originalPoints = new ArrayList<Point>();
 	/**
 	 * all the points in the graph
 	 */
-	//private List<Point> points = new ArrayList<Point>();
 	private List<Point> points = Collections.synchronizedList(new ArrayList<Point>());
 	/**
 	 * a secondary array for temporary storage
@@ -898,9 +908,14 @@ public class FairSMT extends JPanel implements Runnable {
 
 		// sort the points by the x-coordinate.
 		//GraphUtils.sort(x1, y1, w1, numNonSteinerNodes);
-		GraphUtils.sortByX(points, false);
-		List<Point> originalPoints = new ArrayList<Point>();
-		originalPoints.addAll(points);
+		if(this.originalPoints.size() > 0) {
+			this.points.clear();
+			this.points.addAll(originalPoints);
+		}
+		else {
+			GraphUtils.sortByX(points, false);
+			originalPoints.addAll(points);
+		}
 
 		// copy all the points to the secondary points
 		for (int k = 0; k < numNonSteinerNodes; k++) {
@@ -915,7 +930,8 @@ public class FairSMT extends JPanel implements Runnable {
 
 		minTreeLen = Double.MAX_VALUE;
 		numIterations = 0;
-		for (;;) {
+		isRunning = true;
+		while(isRunning) {
 			numIterations++;
 
 			repaintIfNecessary();
@@ -1064,29 +1080,62 @@ public class FairSMT extends JPanel implements Runnable {
 	}
 
 	/**
-	 * start the background thread
+	 * @return
 	 */
-	public void start() {
-		/*
-		if (computationThread == null) {
-			computationThread = new Thread(this);
-			computationThread.start();
-		}
-		*/
-		run();
+	public List<Point> getPoints() {
+		return this.points;
 	}
 
 	/**
-	 * stop the background thread
-	@SuppressWarnings("all")
+	 * start the execution
+	 */
+	public void start() {
+		if(!this.hasRun) {
+			if(this.isRunning || this.computationThread != null)
+				throw new IllegalStateException("Can't start an SMT that's already running!");
+			this.computationThread = new Thread(this);
+			this.computationThread.start();
+		}
+		else {
+			log.warn("This FairSMT has already run.  We won't run it again. " + 
+					"There's a bug in the logic when it restarts that causes index out " +
+					"of bound exceptions because the Japanese dude who originally wrote it did a crappy job. " +
+					"I don't want to figure out how to fix it. :-)");
+		}
+	}
+
+	/**
+	 * stop the execution
 	 */
 	public void stop() {
-		/*
-		if (computationThread != null) {
-			computationThread.stop();
-			computationThread = null;
-		}
-		*/
+		if(!this.isRunning || this.computationThread == null)
+			throw new IllegalStateException("Can't stop an SMT that isn't running!");
+
+		// reset counter variables
+		this.coch = 0;
+		this.coch2 = 0;
+		// make this stop running.
+		this.setRunning(false);
+		this.hasRun = true;
+		//this.secondaryPoints.clear();
+		//this.edges.clear();
+		this.computationThread = null;
+	}
+
+	/**
+	 * is the run loop going?
+	 * @return
+	 */
+	public boolean isRunning() {
+		return this.isRunning;
+	}
+
+	/**
+	 * stop this SMT from running.
+	 * @param isRunning
+	 */
+	private void setRunning(boolean isRunning) {
+		this.isRunning = false;
 	}
 
 	/**
@@ -1097,17 +1146,10 @@ public class FairSMT extends JPanel implements Runnable {
 		JFrame f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		ms.start();
-
 		f.add(ms);
 		f.pack();
 		f.setVisible(true);
-	}
 
-	/**
-	 * @return
-	 */
-	public List<Point> getPoints() {
-		return this.points;
+		ms.start();
 	}
 }

@@ -3,6 +3,8 @@ package edu.umbc.algorithms.fmst;
 import java.awt.Graphics;
 import java.io.Serializable;
 
+import edu.umbc.algorithms.fmst.util.GraphUtils;
+
 /**
  * @author dave
  *

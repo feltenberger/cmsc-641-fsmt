@@ -1,4 +1,4 @@
-package edu.umbc.algorithms.fmst;
+package edu.umbc.algorithms.fmst.util;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,14 +8,22 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.SerializationUtils;
+import org.apache.log4j.Logger;
 
-import edu.umbc.algorithms.old.FairSMT;
+import edu.umbc.algorithms.fmst.FairSMT;
+import edu.umbc.algorithms.fmst.Point;
+
 
 /**
  * @author dave
  *
  */
 public class GraphUtils {
+	/**
+	 * the logger....
+	 */
+	private static final Logger log = Logger.getLogger(GraphUtils.class);
 	/**
 	 * A random number generator for our utils class.
 	 */
@@ -115,6 +123,8 @@ public class GraphUtils {
 
 	/**
 	 * sort such that te1[0]<te1[1]<...<te1[NNh-1]
+	 * this is the crap ass one that was written in the original and is too
+	 * ugly to bother modifying.
 	 * @param te1
 	 * @param te2
 	 * @param te3
@@ -184,8 +194,11 @@ public class GraphUtils {
 	 * @param includeSteinerNodes
 	 * @throws Exception
 	 */
-	public static void dumpSMT(String file, FairSMT smt, boolean includeSteinerNodes) throws Exception {
+	public static void saveSMTPlainText(String file, FairSMT smt, boolean includeSteinerNodes) throws Exception {
 		File out = new File(file);
+		if(!out.getName().endsWith("smt"))
+			out = new File(out.getAbsolutePath() + ".smt");
+
 		StringBuffer sb = new StringBuffer();
 		sb.append(smt.height).append(" ").append(smt.width).append("\n");
 		for(Point p : smt.getPoints()) {
@@ -202,12 +215,48 @@ public class GraphUtils {
 	}
 
 	/**
+	 * Serializes the Steiner Minimum Tree and saves it in the specified file.
+	 * @param file
+	 * @param smt
+	 * @throws Exception
+	 */
+	public static void writeSerializedSMT(String file, FairSMT smt) throws Exception {
+		// serialize the FairSMT object into a byte[]
+		byte[] msSerialized = SerializationUtils.serialize(smt);
+		// store the bytes to a file.
+		FileUtils.writeByteArrayToFile(new File(file), msSerialized);
+	}
+
+	/**
+	 * Loads the reference SMT object.
+	 * @param file
+	 * @return
+	 * @throws Exception
+	 */
+	public static FairSMT readSerializedSMT(String file) throws Exception {
+		FairSMT referenceSMT = null;
+		File reference = new File(file);
+		if(reference.exists()) {
+			byte[] tmp = FileUtils.readFileToByteArray(reference);
+			try {
+				log.info("Trying to load " + file);
+				referenceSMT = (FairSMT)SerializationUtils.deserialize(tmp);
+				log.info("Successfully loaded " + file);
+			} catch (Exception e) {
+				log.error("Error loading the SMT!", e);
+				throw e;
+			}
+		}
+		return referenceSMT;
+	}
+
+	/**
 	 * @param file
 	 * @return
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public static FairSMT readSMT(String file) throws Exception {
+	public static FairSMT readPlainTextSMT(String file) throws Exception {
 		FairSMT fsmt = null;
 
 		File in = new File(file);
@@ -248,6 +297,7 @@ public class GraphUtils {
 		fsmt.getPoints().addAll(allPoints);
 		return fsmt;
 	}
+
 	/**
 	 * The euclidean distance between two points.
 	 * 
