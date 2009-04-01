@@ -25,8 +25,7 @@ public class StartHereFairSMT {
 		if(ms == null) {
 			// create a new SMT.
 			ms = new FairSMT(500, 500, 50);
-			// deserialize the FairSMT
-			GraphUtils.writeSerializedSMT("data/reference_fair.smt", ms);
+			GraphUtils.saveSMTPlainText("data/reference_fair.smt", ms, false);
 		}
 
 		// visualize the min steiner trees
@@ -37,9 +36,9 @@ public class StartHereFairSMT {
 	 * just add the min steiner object to a jframe and show/start it
 	 * @param ms
 	 */
+	@SuppressWarnings("all")
 	private static void showSMT(FairSMT ms) {
 		FairSMTViz viz = new FairSMTViz(ms, true);
-		viz.getClass();
 	}
 
 }
