@@ -65,6 +65,7 @@ public class FairSMTViz extends JFrame {
 		JMenuItem exitAction = new JMenuItem("Exit");
 		fileMenu.add(newAction);
 		fileMenu.add(loadAction);
+		fileMenu.add(saveAction);
 		fileMenu.add(exitAction);
 
 		newAction.addActionListener(new ActionListener() {
