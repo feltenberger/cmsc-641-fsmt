@@ -100,7 +100,7 @@ public class FairSMT extends JPanel implements Runnable {
 	/**
 	 * a secondary array for temporary storage
 	 */
-	private List<Point> secondaryPoints = Collections.synchronizedList(new ArrayList<Point>());
+	private List<Point> temporaryPoints = Collections.synchronizedList(new ArrayList<Point>());
 	/**
 	 * all the minimum points in the graph
 	 */
@@ -229,10 +229,10 @@ public class FairSMT extends JPanel implements Runnable {
 	 */
 	private void copyPointToSecondary(int index) {
 		Point p = this.points.get(index);
-		if(this.secondaryPoints.size() == index)
-			this.secondaryPoints.add(p.copy());
+		if(this.temporaryPoints.size() == index)
+			this.temporaryPoints.add(p.copy());
 		else
-			this.secondaryPoints.set(index, p.copy());
+			this.temporaryPoints.set(index, p.copy());
 	}
 
 	/**
@@ -241,7 +241,7 @@ public class FairSMT extends JPanel implements Runnable {
 	 * @return
 	 */
 	private double x2(int index) {
-		return this.secondaryPoints.get(index).x;
+		return this.temporaryPoints.get(index).x;
 	}
 
 	/**
@@ -283,7 +283,7 @@ public class FairSMT extends JPanel implements Runnable {
 	 * @return
 	 */
 	private double y2(int index) {
-		return this.secondaryPoints.get(index).y;
+		return this.temporaryPoints.get(index).y;
 	}
 
 	/**
@@ -990,6 +990,34 @@ public class FairSMT extends JPanel implements Runnable {
 
 	public void update(Graphics g) {
 		paint(g);
+	}
+	
+	/**
+	 * this is what the method does
+	 */
+	public void makeFair() {
+		int maxAdditionalSteinerNodes = 10;
+		// the only data structures you should need are the minPoints and minEdges!
+		for(int k = 1; k < maxAdditionalSteinerNodes; k++) {
+			moveSteinerNodes();
+			addFairSteinerNode();
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void moveSteinerNodes() {
+		// move around the steiner nodes to make it more fair
+	}
+	
+	/**
+	 * only add one steiner node to the graph and see if it
+	 * maximizes the fairness
+	 */
+	private void addFairSteinerNode() {
+		// do something, probably calling
+		// addSteinerNodeToGraph(mij1, mij2, mij3) //indices to points in the point array
 	}
 
 	/**
