@@ -1009,7 +1009,8 @@ public class FairSMT extends JPanel implements Runnable {
 			addFairSteinerNode();
 			
 		}*/
-	}
+        moveSteinerNodes();
+    }
 
 	/**
 	 *  Added by Fatih Senel
@@ -1026,7 +1027,7 @@ public class FairSMT extends JPanel implements Runnable {
         double cSTDDEV = getStandardDevOfPCR();
 
         MaxHeap heap = new MaxHeap();
-        for (int i = 0; i < numNodesInSMT - 1; i++) {
+        for (int i = 0; i < numNodesInSMT; i++) {
             Point p1 = this.minPoints.get(i);
             if(p1.isSteiner())
                 heap.add(p1);
@@ -1040,6 +1041,8 @@ public class FairSMT extends JPanel implements Runnable {
             }
             heap.rebuildHeap();
         }
+        cSTDDEV = getStandardDevOfPCR();
+        System.out.println("");
 
     }
 
