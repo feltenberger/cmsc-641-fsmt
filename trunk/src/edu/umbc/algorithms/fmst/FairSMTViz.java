@@ -135,8 +135,10 @@ public class FairSMTViz extends JFrame {
 		/* Actions menu */
 		JMenuItem stopAction = new JMenuItem("Stop");
 		JMenuItem startAction = new JMenuItem("Start");
+		JMenuItem fairAction = new JMenuItem("Make Fair");
 		actionsMenu.add(startAction);
 		actionsMenu.add(stopAction);
+		actionsMenu.add(fairAction);
 
 		/* File Menu Options */
 		stopAction.addActionListener(new ActionListener() {
@@ -155,6 +157,11 @@ public class FairSMTViz extends JFrame {
 				} else {
 					log.info("SMT is already running!");
 				}
+			}
+		});
+		fairAction.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				smt.makeFair();
 			}
 		});
 	}

@@ -997,12 +997,18 @@ public class FairSMT extends JPanel implements Runnable {
 	 * this is what the method does
 	 */
 	public void makeFair() {
-		int maxAdditionalSteinerNodes = 10;
+		log.info("running makeFair()");
+		/*int maxAdditionalSteinerNodes = 10;
+		double energyStDev = 0.5;  //maximum standard deviation of the consumption rates
+		double engeryCutoff = 100.0; //maximum energy usage of a node
+		
+		
 		// the only data structures you should need are the minPoints and minEdges!
 		for(int k = 1; k < maxAdditionalSteinerNodes; k++) {
 			moveSteinerNodes();
 			addFairSteinerNode();
-		}
+			
+		}*/
 	}
 
 	/**
@@ -1209,7 +1215,7 @@ public class FairSMT extends JPanel implements Runnable {
 			this.computationThread = new Thread(this);
 			this.computationThread.start();
 		}
-		else {
+		else {			
 			log.warn("This FairSMT has already run.  We won't run it again. " +
 					"There's a bug in the logic when it restarts that causes index out " +
 					"of bound exceptions because the Japanese dude who originally wrote it did a crappy job. " +
@@ -1232,7 +1238,7 @@ public class FairSMT extends JPanel implements Runnable {
 		this.hasRun = true;
 		//this.secondaryPoints.clear();
 		//this.edges.clear();
-		this.computationThread = null;
+		this.computationThread = null;		
 	}
 
 	/**
