@@ -31,6 +31,7 @@ public class StartHereFairSMT {
 
 		// visualize the min steiner trees
 		showSMT(ms);
+		//ms.makeFair();
 	}
 
 	/**
