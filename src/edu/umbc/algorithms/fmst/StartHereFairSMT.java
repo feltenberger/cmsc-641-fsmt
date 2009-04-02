@@ -21,7 +21,8 @@ public class StartHereFairSMT {
 		//FairSMT blah = GraphUtils.readPlainTextSMT("data/dave_test.smt");
 		//showSMT(blah);
 
-		FairSMT ms = GraphUtils.readPlainTextSMT("data/reference_fair.smt");
+		//FairSMT ms = GraphUtils.readPlainTextSMT("data/reference_fair.smt");
+		FairSMT ms = GraphUtils.readPlainTextSMT("data/3_nodes.smt");
 		if(ms == null) {
 			// create a new SMT.
 			ms = new FairSMT(500, 500, 50);
