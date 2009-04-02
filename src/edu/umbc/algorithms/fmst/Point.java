@@ -10,7 +10,7 @@ import edu.umbc.algorithms.fmst.util.GraphUtils;
  * @author dave
  */
 @SuppressWarnings("serial")
-public class Point implements Serializable {
+public class Point implements Serializable, Comparable {
     public static final int POINT_SIZE = 6;
     public double x;
     public double y;
@@ -130,4 +130,16 @@ public class Point implements Serializable {
         return neighbors.get(index);
 
     }
+
+    public int compareTo(Object o) {
+        Point e = (Point) o;
+        if (this.getPCR() == e.getPCR()) {
+            return 0;
+        } else if (this.getPCR() > e.getPCR()) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+    
 }
