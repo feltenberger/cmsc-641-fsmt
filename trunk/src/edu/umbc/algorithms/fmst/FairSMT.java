@@ -1032,6 +1032,7 @@ public class FairSMT extends JPanel implements Runnable {
                 Point target = source.getFarthestNeighbor();
                 moveTowards(source, target);
             }
+            heap.rebuildHeap();
         }
 
     }
