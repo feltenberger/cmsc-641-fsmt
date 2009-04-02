@@ -998,7 +998,8 @@ public class FairSMT extends JPanel implements Runnable {
 	 */
 	public void makeFair() {
 		log.info("running makeFair()");
-		/*int maxAdditionalSteinerNodes = 10;
+		
+		int maxAdditionalSteinerNodes = 10;
 		double energyStDev = 0.5;  //maximum standard deviation of the consumption rates
 		double engeryCutoff = 100.0; //maximum energy usage of a node
 		
@@ -1006,10 +1007,12 @@ public class FairSMT extends JPanel implements Runnable {
 		// the only data structures you should need are the minPoints and minEdges!
 		for(int k = 1; k < maxAdditionalSteinerNodes; k++) {
 			moveSteinerNodes();
-			addFairSteinerNode();
+			//addFairSteinerNode();			
+		}
 			
-		}*/
-        moveSteinerNodes();
+		
+		log.info("done with makeFair()");
+        //moveSteinerNodes();
     }
 
 	/**
@@ -1017,7 +1020,7 @@ public class FairSMT extends JPanel implements Runnable {
 	 */
 	private void moveSteinerNodes() {
 
-        for (int i = 0; i < numNodesInSMT - 1; i++) {
+        for (int i = 0; i < this.minEdges.size(); i++) {
             Point p1 = this.minPoints.get(this.minEdges.get(i).index1);
             Point p2 = this.minPoints.get(this.minEdges.get(i).index2);
             p1.neighbors.add(p2);
@@ -1042,7 +1045,7 @@ public class FairSMT extends JPanel implements Runnable {
             heap.rebuildHeap();
         }
         cSTDDEV = getStandardDevOfPCR();
-        System.out.println("");
+        System.out.println(cSTDDEV);
 
     }
 
