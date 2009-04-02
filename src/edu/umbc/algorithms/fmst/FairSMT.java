@@ -1089,7 +1089,7 @@ public class FairSMT extends JPanel implements Runnable {
         double mean = getMeanPCR();
         double variance = 0;
         int counter = 0;
-        for (int i = 0; i < numNodesInSMT - 1; i++) {
+        for (int i = 0; i < numNodesInSMT; i++) {
             Point p1 = this.minPoints.get(i);
             if(p1.isSteiner()){
                variance += Math.pow((p1.getPCR()-mean),2);
@@ -1102,7 +1102,7 @@ public class FairSMT extends JPanel implements Runnable {
     private double getMeanPCR(){
         double avg = 0;
         int counter = 0;
-        for (int i = 0; i < numNodesInSMT - 1; i++) {
+        for (int i = 0; i < numNodesInSMT; i++) {
             Point p1 = this.minPoints.get(i);
             if(p1.isSteiner()){
                 avg += p1.getPCR();
