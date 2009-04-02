@@ -1032,7 +1032,7 @@ public class FairSMT extends JPanel implements Runnable {
                 heap.add(p1);
         }
 
-        for (int i = 0; i < numNodesInSMT - 1; i++) {
+        for (int i = 0; i < heap.size(); i++) {
             Point source = (Point) heap.extractMax();
             if(source.getPCR() > Constants.MAX_PCR_ALLOWED){
                 Point target = source.getFarthestNeighbor();
@@ -1041,6 +1041,10 @@ public class FairSMT extends JPanel implements Runnable {
             heap.rebuildHeap();
         }
 
+    }
+
+    public void test(){
+        makeFair();
     }
 
     private void moveTowards(Point source, Point target) {
