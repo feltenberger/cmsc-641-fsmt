@@ -1,4 +1,11 @@
-\section{Related Work}
+\section{Related Work}\label{Related Work}
+
+Connectivity is by far the most important criterion involved in WSN design decisions. Extensive research has been conducted to:
+\begin{itemize}
+\item identify ways to interconnect all nodes with a minimum number of links. The Minimum Spanning Tree (MST) adopted from graph theory and general networking addresses this issue.
+\item interconnect nodes by a network of shortest length when additional nodes (i.e. relay nodes) are introduced. This problem has been studied as the Steiner Tree problem.
+\item optimize a network of shortest length according to a restricting parameter. In WSN, the transmission range of a node may impose limits on the length of a link.
+\end{itemize}
 
 Cheng \cite{RelaySensor} proposed a relay node placement algorithm using the minimum number of relay nodes, so that the distance between each hop is less than or equal to the common transmission range. This problem is similar to the Steiner Minimum Tree with minimum number of Steiner Points and bounded edge-length (SMT-MSPBEL). They proposed a 3-approximation algorithm and a 2.5 approximation algorithm. The 2.5 approximation algorithm is a randomized algorithm whose performance is faster than 3-approximation algorithm.
 
