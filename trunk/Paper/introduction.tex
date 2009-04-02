@@ -1,0 +1,34 @@
+\section{Introduction}
+
+Over the past decade, research in the area of Wireless Sensor Networks (WSN) has produced valuable insight in the private, public and medical sectors. WSNs consist of a collection of independent devices (nodes) that are connected wirelessly in an ad hoc fashion. Generally, each node is equipped with sensors collecting information from and monitoring its environment. Evaluation of such information enables reactive, proactive and modeling capabilities each of which is utilized in fields such as traffic control, home automation and biomedication, to name a few.
+
+The size of WSNs ranges from a few nodes to upwards of 10000 nodes covering areas beyond wireless transmission capabilities. Multi-hop networking is an integral part in these networks to ensure connectivity between all nodes. Connectivity is by far the most important criterion involved in WSN design decisions. Extensive research has been conducted to:
+\begin{itemize}
+\item identify ways to interconnect all nodes with a minimum number of links. The Minimum Spanning Tree (MST) adopted from graph theory and general networking addresses this issue.
+\item interconnect nodes by a network of shortest length when additional nodes (i.e. relay nodes) are introduced. This problem has been studied as the Steiner Tree problem.
+\item optimize a network of shortest length according to a restricting parameter. In WSN, the transmission range of a node may impose limits on the length of a link.
+\end{itemize}
+
+A second important criterion, which is the focus of our work, is the energy efficiency of the network. Nodes in a WSN are typically battery powered and as such their lifetime can be measured by their average battery lifetime. In medical applications such as patient embedded sensors, battery conservation becomes a matter involving the quality of life for a patient. The shorter the lifetime of a sensor node, the more often a patient must undergo node replacement procedures. 
+
+Wireless radio transmissions drop off at an exponential rate due to ground reflection of radio signals. The further a signal should travel to more energy must be utilized. Since the signal attenuation rate is exponential with distance, a significant amount of energy must be used to transmit a signal only a small distance further. Chang et. al \cite{RelaySensor} investigated WSN power consumption optimization by imposing a global maximum transmission range and employing Steiner Points in the resulting Steiner Minimum Tree as relay nodes to ensure connectivity. Using this technique, \cite{RelaySensor} were able to conserve a significant amount of energy in the overall WSN topology.
+
+While overall power consumption is certainly an improvement over previous architectures, we are interested in identifying approximately equal power consumption for every node in the network. Our work would have an important impact on WSN where predictability of equal power consumptions is important. For example, if the battery lifetime of every node in a WSN for patient biomedication is approximately equal and maximized, then a patient will undergo the fewest number of  node replacement procedures. During such a procedure, every node can be replaced as battery lifetimes are approximately equal. This idea differs from previous work in that power consumption of the network as a whole is equalized and optimized as opposed to only optimizing the power consumption which may leave individual nodes with differing power consumption rates. Hence, we introduce the notion of \textit{fairness} of power consumption in WSN. We, therefore, propose a two-fold optimization problem as follows:
+Optimize the fairness of a measure $F_n$ for each node $n$ across a wireless sensor network, given that $F_n$ is exponentially related to a distance measure between neighboring nodes. Thus, $F_n$ is to be minimized. Furthermore, the network is to be connected in a way such that, after the addition of a minimal number of relay nodes, the spanning tree connecting the network is of minimum length and the distances between nodes are approximately equal.
+
+\subsection{Problem Formulation}
+Specifies the problem (i.e. fairness in WSN) we are addressing in this paper. Defines the key concepts, such a fairness in relation to power consumption and efficiency of power consumption as well as addresses pitfalls such as minimal power consumption which is not addressed by this paper.
+\subsection{System Model}
+The system model is explained. All assumptions required for the model are specified.
+
+Important performance metrics, such as:
+\begin{itemize}
+\item \texttt{time to death of the first node}(TTFD)
+\item \texttt{average node lifetime} (ANL)
+\item \texttt{cut vertex lifetime} and its optimality
+\item additional resource requirements such as \texttt{number of Steiner points} and additional nodes
+\item $L$ - maximum power consumption rate
+\item $K$ - number of new Steiner Points
+\item $\alpha$ - minimum standard deviation of power consumption rates given $K$ Steiner points
+\end{itemize}
+are defined in this section.

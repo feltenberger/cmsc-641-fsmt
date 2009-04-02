@@ -1,0 +1,65 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage[pdftex]{graphicx}
+\usepackage[cmex10]{amsmath}
+\usepackage{algorithmic}
+\usepackage[tight,footnotesize]{subfigure}
+\usepackage{url}
+
+\begin{document}
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+\title{Fair, Energy-aware Connectivity in Wireless Sensor Networks}
+% author names and affiliations
+% use a multiple column layout for up to three different
+% affiliations
+\author{\IEEEauthorblockN{Niels Kasch*}
+\IEEEauthorblockA{Email: nkasch1@umbc.edu}
+\and
+\IEEEauthorblockN{Dave Feltenberger*}
+\IEEEauthorblockA{Email: dfelten1@umbc.edu\\\\
+*Department of Computer Science and\\Electrical Engineering\\
+University of Maryland, Baltimore County\\
+Baltimore, MD 21250\\
+}
+\and
+\IEEEauthorblockN{Fatih Senel*}
+\IEEEauthorblockA{Email: fsenel1@umbc.edu}
+}
+\maketitle
+
+\begin{abstract}
+Wireless Sensor Networks (WSN) consist of a collection of independent devices (nodes) that are connected wirelessly in an ad hoc fashion. Generally, each node is equipped with sensors collecting information from and monitoring its environment. Information gathered from WSN has had an enormous impact in the private and public sectors such as traffic monitoring and biomedication.
+
+Reliable connectivity in WSN has been an extensive research focus followed by energy conservation measures. As devices (nodes) in a WSN are often battery powered, battery lifetimes dictate node lifespans. The more energy can be conserved, the longer the WSN can operate without interruption.
+
+Previous work focuses on power optimization of the overall sensor network. The drawback of such a strategy comes from the unequal power consumption rates of different nodes. Since nodes require more energy in order to cover greater transmission distances, it follows that replacement schedules according to battery lifetimes differ and are harder to predict for individual nodes. Equalized replacement schedules are essential for biomedication application. In such a setting, it is preferable to replace all nodes in one procedure with minimal patient discomfort.
+
+We introduce the notion of \textit{fairness} of power consumption in WSN. We propose a two-fold optimization problem where the fairness of a measure $F_n$ for each node $n$ across a wireless sensor network is to be minimized. In addition, a WSN is to be connected in a way such that, after the addition of a minimal number of relay nodes, the spanning tree connecting the network is of minimum length and the distances between nodes are approximately equal.
+\end{abstract}
+
+\IEEEpeerreviewmaketitle
+
+\input{introduction}
+\input{relatedWork}
+\input{approach}
+\input{analysis}
+
+
+\section{Conclusion}
+Concluding remarks summarizing our approach and future work will be outlined in this section.
+
+\section*{Acknowledgment}
+
+The authors would like to thank...
+
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEfull,paper}
+
+
+
+% that's all folks
+\end{document}
+
+
+
