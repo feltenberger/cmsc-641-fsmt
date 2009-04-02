@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.awt.geom.Point2D;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.SerializationUtils;
@@ -318,5 +319,47 @@ public class GraphUtils {
         return Math.pow(Math.pow(d3 - d1, 2.0) + Math.pow(d4 - d2, 2.0), 0.5);
     }
 
+    /**
+     * Assume a line whose starting coordinate is (x1,y1) and final coordinate is (x2, y2)
+     * This function returns the coordinates of new point which sits along the line and the distance
+     * between initial point and new point = distance
+     * @param x1 x-coordinate of initial point
+     * @param y1 y-coordinate of initial point
+     * @param x2 x-coordinate of final point
+     * @param y2 y-coordinate of final point
+     * @param distance distance from initial point
+     * @return coordinate of new point
+     */
+
+    public static Point2D getCoordinates(double x1, double y1, double x2, double y2, double distance) {
+        double nx, ny;
+        Point2D result = new Point2D.Double();
+        double D = euclideanDistance(x1, y1, x2, y2);
+        if (distance >= D) {
+            result.setLocation(x2, y2);
+            return result;
+        }
+
+        double abs_diff_y = Math.abs(y2 - y1) * distance / D;
+        double abs_diff_x = Math.abs(x2 - x1) * distance / D;
+
+        if (y2 > y1) {
+            ny = y1 + abs_diff_y;
+        } else if (y2 < y1) {
+            ny = y1 - abs_diff_y;
+        } else {
+            ny = y1;
+        }
+        if (x2 > x1) {
+            nx = x1 + abs_diff_x;
+        } else if (x2 < x1) {
+            nx = x1 - abs_diff_x;
+        } else {
+            nx = x1;
+        }
+
+        result.setLocation(nx, ny);
+        return result;
+    }
 
 }
