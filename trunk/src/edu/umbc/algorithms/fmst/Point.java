@@ -115,4 +115,19 @@ public class Point implements Serializable {
         }
         return Math.pow(max,2);
     }
+
+    public Point getFarthestNeighbor(){
+        double max = -1;
+        int index = -1;
+        for (int i = 0; i < neighbors.size(); i++) {
+            Point neighbor = neighbors.get(i);
+            double dist = GraphUtils.euclideanDistance(x, y, neighbor.x, neighbor.y);
+            if (dist > max) {
+                max = dist;
+                index = i;
+            }
+        }
+        return neighbors.get(index);
+
+    }
 }
