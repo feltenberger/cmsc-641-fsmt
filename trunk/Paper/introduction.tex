@@ -1,15 +1,23 @@
 \section{Introduction}
 
-Over the past decade, research in the area of Wireless Sensor Networks (WSN) has produced valuable insight in the private, public and medical sectors. WSNs consist of a collection of independent devices (nodes) that are connected wirelessly in an ad hoc fashion. Generally, each node is equipped with sensors collecting information from and monitoring its environment. Evaluation of such information enables reactive, proactive and modeling capabilities each of which is utilized in fields such as traffic control, home automation and biomedication, to name a few.
+Over the past decade, Wireless Sensor Networks (WSN) have been employed in a variety of domains ranging from macroscopic applications such a weather monitoring and traffic control to microscopic applications in medical screening and biomedication. WSNs consist of a collection of independent devices (nodes) that are connected wirelessly in an ad hoc fashion. Individual nodes are equipped with sensors collecting information from the environment. The types of sensors employed by a node depend on the purpose of the WSN and may include active and passive sensors. The size of WSNs (i.e. the number of nodes in the network) also depends on the intended purpose of the network as well as other factors such as the networks resolution in terms of sampling frequency across space and transmission range, to name a few.
 
-The size of WSNs ranges from a few nodes to upwards of 10000 nodes covering areas beyond wireless transmission capabilities. Multi-hop networking is an integral part in these networks to ensure connectivity between all nodes. Connectivity is by far the most important criterion involved in WSN design decisions. Extensive research has been conducted to:
-\begin{itemize}
-\item identify ways to interconnect all nodes with a minimum number of links. The Minimum Spanning Tree (MST) adopted from graph theory and general networking addresses this issue.
-\item interconnect nodes by a network of shortest length when additional nodes (i.e. relay nodes) are introduced. This problem has been studied as the Steiner Tree problem.
-\item optimize a network of shortest length according to a restricting parameter. In WSN, the transmission range of a node may impose limits on the length of a link.
-\end{itemize}
+As wireless transmission ranges are limited, multi-hop networking plays an integral role in ensuring the connectivity of the network as a whole. Nodes transmit collected information to a centralized collection point, which in turn may distribute instructions or management data to nodes. Therefore, it is essential that segments of the network do not become disconnected due to wireless transmission range limitations. Section \ref{Related Work} reviews past and current research of connectivity in WSNs.
 
-A second important criterion, which is the focus of our work, is the energy efficiency of the network. Nodes in a WSN are typically battery powered and as such their lifetime can be measured by their average battery lifetime. In medical applications such as patient embedded sensors, battery conservation becomes a matter involving the quality of life for a patient. The shorter the lifetime of a sensor node, the more often a patient must undergo node replacement procedures. 
+A second important criterion, which is one of the foci of this paper, concerns the energy efficiency of WSNs. Consider, for example, a remotely located earth quake sensing station or a patient with implanted heart rate and blood gas sensors. Due to geographical (non-availability of power line infrastructure), economic (prohibitive cost of expanding infrastructure) and/or medical (infeasibility of permanent power connections) reasons, among others, it often is impractical or impossible to power the nodes of a WSN using existing energy grids. For those reason, nodes are often battery powered and as such their lifetime is subject to the life of their batteries.
+
+Furthermore, in this paper we introduce the notion of fairness with regard to power consumption. The aim of fair power consumption is to equalize the power consumption rates of nodes across an entire WSN. Fair power consumption has an immediate impact on economical and practical considerations for WSNs. Fair power consumption enables precise predictability of battery lifetimes of all the nodes in a network. Such predictability can be used to optimize node replacement schedules such that (1) all nodes fail (due to battery exhaustion) simultaniously, (2) groups of nodes fail simultaniously, or (3) nodes fail in a predetermined order. For example, it is desirable to replace implanted biomedical sensor nodes of a patient all at once at the largest possible intervals in order to minimize frequent multiple invasive procedures. Therefore, it is desirable to maximize the fair battery lifetime of all nodes in the WSN.
+
+ shorter the lifetime of a sensor node, the more often a patient must undergo node replacement procedures. In such applications, it is furthermore desirable to achieve an equal 
+
+ In this paper, we introduce the notion of fairness in power consumption in
+
+
+
+
+
+
+
 
 Wireless radio transmissions drop off at an exponential rate due to ground reflection of radio signals. The further a signal should travel to more energy must be utilized. Since the signal attenuation rate is exponential with distance, a significant amount of energy must be used to transmit a signal only a small distance further. Chang et. al \cite{RelaySensor} investigated WSN power consumption optimization by imposing a global maximum transmission range and employing Steiner Points in the resulting Steiner Minimum Tree as relay nodes to ensure connectivity. Using this technique, \cite{RelaySensor} were able to conserve a significant amount of energy in the overall WSN topology.
 
