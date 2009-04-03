@@ -1000,8 +1000,14 @@ public class FairSMT extends JPanel implements Runnable {
 	 */
 	public void makeFair()
 	{
+		// repaint occasionally
+		//Thread repaintThread = new Thread(new Repainter(this));
+		//repaintThread.start();
+
+		//NOTE TO NIELS: ENSURE THAT ALL NODES ARE WITHIN TRANSMISSION RANGE BEFORE OPTIMIZING
+		
 		log.info("running makeFair()");
-		//this.stop();		
+		//this.stop();
 		if (testVariableNiels) //only construct the neighbor list once (should be moved somewhere else)
 		{
 			makeNeighborList();
@@ -1015,7 +1021,7 @@ public class FairSMT extends JPanel implements Runnable {
 		int converge = 0;
 		//print some state before optimizing
 		printStatistics();
-		
+
 		while (stdev > 0 && converge <= 5)
 		{
 			moveSteinerNodes();
@@ -1025,8 +1031,8 @@ public class FairSMT extends JPanel implements Runnable {
 				converge++;
 			}
 			stdev = temp;
-						
-			repaint();
+
+			//repaint();
 		}
 		//print some stats after moving nodes
 		printStatistics();		
@@ -1038,10 +1044,28 @@ public class FairSMT extends JPanel implements Runnable {
 		// print some stats after adding nodes
 		printStatistics();
 		
-		
 		log.info("done with makeFair()");
 		repaint();
     }
+
+	/*
+	@SuppressWarnings("all")
+	private class Repainter implements Runnable {
+		FairSMT smt = null;
+		private int sleepTime = 100; // in ms
+		public Repainter(FairSMT smt) {
+			this.smt = smt;
+		}
+		public void run() {
+			while(true) {
+				smt.repaint();
+				try {
+					Thread.sleep(this.sleepTime);
+				} catch (Exception ignored) { }
+			}
+		}
+	}
+	*/
 	
 	 /**
 	 * only add one steiner node to the graph and see if it
@@ -1197,8 +1221,12 @@ public class FairSMT extends JPanel implements Runnable {
             if(source.getPCR() > Constants.MAX_PCR_ALLOWED){
                 Point target = source.getFarthestNeighbor();                
                 moveTowards(source, target);
-                //Point lowestPCRNeighbor = source.getLowestPCRNeighbor();
-                //moveAway(source, lowestPCRNeighbor);
+                Point lowestPCRNeighbor = source.getLowestPCRNeighbor();
+                moveAway(source, lowestPCRNeighbor);
+    			try {
+    				repaint();
+    				Thread.sleep(200);
+    			} catch (Exception ignored) { }
             }
             heap.rebuildHeap();
         }

@@ -72,6 +72,10 @@ public class FairSMTViz extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// get the height and width
 				SimpleDialog dialog = new SimpleDialog(FairSMTViz.this, true, "What width / height (nxn)?");
+				if(!dialog.getClickedOk()) {
+					log.warn("Clicked cancel.");
+					return;
+				}
 				int heightAndWidth = Integer.parseInt(dialog.getValue());
 				
 				// get the number of nodes
