@@ -8,20 +8,17 @@ A second important criterion, which is one of the foci of this paper, concerns t
 
 Furthermore, in this paper we introduce the notion of fairness with regard to power consumption. The aim of fair power consumption is to equalize the power consumption rates of nodes across an entire WSN. Fair power consumption has an immediate impact on economical and practical considerations for WSNs. Fair power consumption enables precise predictability of battery lifetimes of all the nodes in a network. Such predictability can be used to optimize node replacement schedules such that (1) all nodes fail (due to battery exhaustion) simultaniously, (2) groups of nodes fail simultaniously, or (3) nodes fail in a predetermined order. For example, it is desirable to replace implanted biomedical sensor nodes of a patient all at once at the largest possible intervals in order to minimize frequent multiple invasive procedures. Therefore, it is desirable to maximize the fair battery lifetime of all nodes in the WSN.
 
- shorter the lifetime of a sensor node, the more often a patient must undergo node replacement procedures. In such applications, it is furthermore desirable to achieve an equal 
-
- In this paper, we introduce the notion of fairness in power consumption in
+Wireless radio transmissions drop off at an exponential rate due to ground reflection of radio signals. Since the signal attenuation rate is exponential with distance, it requires a significant amount of energy to transmit a signal only a small distance further. As such, it is often desirable to introduce relay nodes. Relay
 
 
-
+. The further a signal should travel to more energy must be utilized. Since the signal attenuation rate is exponential with distance, a significant amount of energy must be used to transmit a signal only a small distance further. Chang et. al \cite{RelaySensor} investigated WSN power consumption optimization by imposing a global maximum transmission range and employing Steiner Points in the resulting Steiner Minimum Tree as relay nodes to ensure connectivity. Using this technique, \cite{RelaySensor} were able to conserve a significant amount of energy in the overall WSN topology.
 
 
 
 
+This idea differs from previous work in that power consumption of the network as a whole is equalized and optimized as opposed to only optimizing the power consumption which may leave individual nodes with differing power consumption rates. Hence, we introduce the notion of \textit{fairness} of power consumption in WSN. We, therefore, propose a two-fold optimization problem as follows:
 
-Wireless radio transmissions drop off at an exponential rate due to ground reflection of radio signals. The further a signal should travel to more energy must be utilized. Since the signal attenuation rate is exponential with distance, a significant amount of energy must be used to transmit a signal only a small distance further. Chang et. al \cite{RelaySensor} investigated WSN power consumption optimization by imposing a global maximum transmission range and employing Steiner Points in the resulting Steiner Minimum Tree as relay nodes to ensure connectivity. Using this technique, \cite{RelaySensor} were able to conserve a significant amount of energy in the overall WSN topology.
 
-While overall power consumption is certainly an improvement over previous architectures, we are interested in identifying approximately equal power consumption for every node in the network. Our work would have an important impact on WSN where predictability of equal power consumptions is important. For example, if the battery lifetime of every node in a WSN for patient biomedication is approximately equal and maximized, then a patient will undergo the fewest number of  node replacement procedures. During such a procedure, every node can be replaced as battery lifetimes are approximately equal. This idea differs from previous work in that power consumption of the network as a whole is equalized and optimized as opposed to only optimizing the power consumption which may leave individual nodes with differing power consumption rates. Hence, we introduce the notion of \textit{fairness} of power consumption in WSN. We, therefore, propose a two-fold optimization problem as follows:
 Optimize the fairness of a measure $F_n$ for each node $n$ across a wireless sensor network, given that $F_n$ is exponentially related to a distance measure between neighboring nodes. Thus, $F_n$ is to be minimized. Furthermore, the network is to be connected in a way such that, after the addition of a minimal number of relay nodes, the spanning tree connecting the network is of minimum length and the distances between nodes are approximately equal.
 
 \subsection{Problem Formulation}

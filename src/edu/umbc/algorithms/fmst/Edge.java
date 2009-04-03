@@ -30,6 +30,11 @@ public class Edge implements Comparable {
         this.p1 = p1;
         this.p2 = p2;
     }
+    
+    public Edge(int index1, int index2) {
+        this.index1 = index1;
+        this.index2 = index2;
+    }
 
     /**
      * Draw this edge.

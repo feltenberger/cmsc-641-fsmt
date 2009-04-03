@@ -23,11 +23,11 @@ public class StartHereFairSMT {
 
 		//FairSMT ms = GraphUtils.readPlainTextSMT("data/reference_fair.smt");
 		FairSMT ms = GraphUtils.readPlainTextSMT("data/3_nodes.smt");
-		if(ms == null) {
+		/*if(ms == null) {
 			// create a new SMT.
 			ms = new FairSMT(500, 500, 50);
-			GraphUtils.saveSMTPlainText("data/reference_fair.smt", ms, false);
-		}
+			GraphUtils.saveSMTPlainText("data/4-nodes.smt", ms, false);
+		}*/
 
 		// visualize the min steiner trees
 		showSMT(ms);

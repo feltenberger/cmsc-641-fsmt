@@ -105,7 +105,7 @@ public class Point implements Serializable, Comparable {
      * @return maximum edge weight to the power 2
      */
     public double getPCR() {
-        double max = -1;
+    	double max = -1;
         for (int i = 0; i < neighbors.size(); i++) {
             Point neighbor = neighbors.get(i);
             double dist = GraphUtils.euclideanDistance(x, y, neighbor.x, neighbor.y);
@@ -115,6 +115,34 @@ public class Point implements Serializable, Comparable {
         }
         return Math.pow(max,2);
     }
+    
+    public double getAVGPCR() {
+    	double avg = 0;
+        for (int i = 0; i < neighbors.size(); i++) {
+            Point neighbor = neighbors.get(i);
+            double dist = GraphUtils.euclideanDistance(x, y, neighbor.x, neighbor.y);
+            
+            avg += dist;            
+        }
+        return Math.pow(avg/neighbors.size(),2);
+    }
+       
+    public Point getLowestPCRNeighbor()
+    {
+        double minPCR = Double.POSITIVE_INFINITY;
+        Point lowest = null;
+        for (int i = 0; i < neighbors.size(); i++) {
+            Point neighbor = neighbors.get(i);
+           
+            if (neighbor.getPCR() < minPCR)
+            {
+            	minPCR = neighbor.getPCR();
+            	lowest = neighbor;            	
+            }                   
+        }
+        return lowest;
+    }
+    
 
     public Point getFarthestNeighbor(){
         double max = -1;
@@ -131,6 +159,13 @@ public class Point implements Serializable, Comparable {
 
     }
 
+    public boolean isSameAs(Point p)
+    {
+    	if (p.w == this.w && p.x == this.x && p.y == this.y)
+    		return true;
+    	return false;
+    }
+    
     public int compareTo(Object o) {
         Point e = (Point) o;
         if (this.getPCR() == e.getPCR()) {

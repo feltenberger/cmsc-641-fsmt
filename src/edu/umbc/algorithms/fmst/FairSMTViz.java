@@ -161,7 +161,7 @@ public class FairSMTViz extends JFrame {
 		});
 		fairAction.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				smt.makeFair();
+				smt.makeFair();				
 			}
 		});
 	}
