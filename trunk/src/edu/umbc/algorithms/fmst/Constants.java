@@ -8,4 +8,5 @@ package edu.umbc.algorithms.fmst;
 public interface Constants {
     double MAX_STDEV = 20;//to be need to changes
     double MAX_PCR_ALLOWED = 100;
+    int MAX_NEW_STEINER_NODES = 10;
 }
