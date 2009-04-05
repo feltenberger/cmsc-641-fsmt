@@ -309,14 +309,14 @@ public class GraphUtils {
     /**
      * The euclidean distance between two points.
      *
-     * @param d1 x-coordinate of first point
-     * @param d2 y-coordinate of first point
-     * @param d3 x-coordinate of second point
-     * @param d4 y-coordinate of second point
+     * @param x1 x-coordinate of first point
+     * @param y1 y-coordinate of first point
+     * @param x2 x-coordinate of second point
+     * @param y2 y-coordinate of second point
      * @return distance between first and second point
      */
-    public static double euclideanDistance(double d1, double d2, double d3, double d4) {
-        return Math.pow(Math.pow(d3 - d1, 2.0) + Math.pow(d4 - d2, 2.0), 0.5);
+    public static double euclideanDistance(double x1, double y1, double x2, double y2) {
+        return Math.pow(Math.pow(x2 - x1, 2.0) + Math.pow(y2 - y1, 2.0), 0.5);
     }
 
     /**
