@@ -6,7 +6,11 @@ package edu.umbc.algorithms.fmst;
  *         Time: 12:48:37 PM
  */
 public interface Constants {
-    double MAX_STDEV = 20;//to be need to changes
-    double MAX_PCR_ALLOWED = 100;
+    Double MAX_STDEV = 500.0;  //to be need to changes
+    Double MAX_PCR_ALLOWED = 4000.0;
     int MAX_NEW_STEINER_NODES = 10;
+    Double TRANSMISSION_RANGE = Math.sqrt(MAX_PCR_ALLOWED);
+    int CONVERGENCE_CUTOFF = 5;  //when we see the same STDEV  CONVERGENCE_CUTOFF times in a row, the we converged
+    int CONVERGENCE_THRESHOLD = 10;  //the difference of the standard deviation between loops must be greater
+                                     //than this value, otherwise we consider it as "converging"
 }
