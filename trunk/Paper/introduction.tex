@@ -4,36 +4,13 @@ Over the past decade, Wireless Sensor Networks (WSN) have been employed in a var
 
 As wireless transmission ranges are limited, multi-hop networking plays an integral role in ensuring the connectivity of the network as a whole. Nodes transmit collected information to a centralized collection point, which in turn may distribute instructions or management data to nodes. Therefore, it is essential that segments of the network do not become disconnected due to wireless transmission range limitations. Section \ref{Related Work} reviews past and current research of connectivity in WSNs.
 
-A second important criterion, which is one of the foci of this paper, concerns the energy efficiency of WSNs. Consider, for example, a remotely located earth quake sensing station or a patient with implanted heart rate and blood gas sensors. Due to geographical (non-availability of power line infrastructure), economic (prohibitive cost of expanding infrastructure) and/or medical (infeasibility of permanent power connections) reasons, among others, it often is impractical or impossible to power the nodes of a WSN using existing energy grids. For those reason, nodes are often battery powered and as such their lifetime is subject to the life of their batteries.
+A second important criterion, which is one of the foci of this paper, concerns the energy efficiency of WSNs. Consider, for example, a remotely located earth quake sensing station or a patient with implanted heart rate and blood gas sensors. Due to geographical (non-availability of power line infrastructure), economic (prohibitive cost of expanding infrastructure) and/or medical (infeasibility of permanent power connections) reasons, among others, it often is impractical or impossible to power the nodes of a WSN using existing energy grids. For those reason, nodes are often battery powered, and as such, their lifetime is subject to the life of their batteries. Energy efficiency of nodes is therefore a primary concern for extending the lifetime of individual nodes and the network as a whole.
 
 Furthermore, in this paper we introduce the notion of fairness with regard to power consumption. The aim of fair power consumption is to equalize the power consumption rates of nodes across an entire WSN. Fair power consumption has an immediate impact on economical and practical considerations for WSNs. Fair power consumption enables precise predictability of battery lifetimes of all the nodes in a network. Such predictability can be used to optimize node replacement schedules such that (1) all nodes fail (due to battery exhaustion) simultaniously, (2) groups of nodes fail simultaniously, or (3) nodes fail in a predetermined order. For example, it is desirable to replace implanted biomedical sensor nodes of a patient all at once at the largest possible intervals in order to minimize frequent multiple invasive procedures. Therefore, it is desirable to maximize the fair battery lifetime of all nodes in the WSN.
 
-Wireless radio transmissions drop off at an exponential rate due to ground reflection of radio signals. Since the signal attenuation rate is exponential with distance, it requires a significant amount of energy to transmit a signal only a small distance further. As such, it is often desirable to introduce relay nodes. Relay
+Wireless radio transmissions drop off at an exponential rate due to ground reflection of radio signals. Since the signal attenuation rate is exponential with distance, it requires a significant amount of energy to transmit a signal only a small distance further. As such, it is often desirable to introduce relay nodes. Relay nodes differ in that their primary task is not sensing their environment but to ensure connectivity of the network. For the purposes of this paper, relay nodes will also be utilized to approximately equalize power consumption rates. Relay nodes are introduced in areas (as long as resource limitations permit) where power consumption is highest.
 
+In this work, we propose an algorithm with the aim to minimize overall power consumption of WSNs. While overall power consumption has been studied previously, our algorithm considers fairness in power consumption rates in the minimization process. As seen in Section \ref{approach}, our algorithm may introduce additional, limited resources (i.e. nodes) to a fixed network. These resources may be moved to achieve minimal overal power consumption and maximum fairness. Hence, we introduce an approximation algorithm for three dimensions in WSNs: (1) minimal power consumption, (2) maximum fairness in power consumption and (3) minimal additional resources.
 
-. The further a signal should travel to more energy must be utilized. Since the signal attenuation rate is exponential with distance, a significant amount of energy must be used to transmit a signal only a small distance further. Chang et. al \cite{RelaySensor} investigated WSN power consumption optimization by imposing a global maximum transmission range and employing Steiner Points in the resulting Steiner Minimum Tree as relay nodes to ensure connectivity. Using this technique, \cite{RelaySensor} were able to conserve a significant amount of energy in the overall WSN topology.
+In Section \ref{Related Work} we present previous work relevant to our research followed by a precise problem definition, our approach and resulting algorithm in Section \ref{approach}. Section \ref{analysis} gives a formal analysis of our algorithm. We conclude our discussion in Section \ref{conclusion}.
 
-
-
-
-This idea differs from previous work in that power consumption of the network as a whole is equalized and optimized as opposed to only optimizing the power consumption which may leave individual nodes with differing power consumption rates. Hence, we introduce the notion of \textit{fairness} of power consumption in WSN. We, therefore, propose a two-fold optimization problem as follows:
-
-
-Optimize the fairness of a measure $F_n$ for each node $n$ across a wireless sensor network, given that $F_n$ is exponentially related to a distance measure between neighboring nodes. Thus, $F_n$ is to be minimized. Furthermore, the network is to be connected in a way such that, after the addition of a minimal number of relay nodes, the spanning tree connecting the network is of minimum length and the distances between nodes are approximately equal.
-
-\subsection{Problem Formulation}
-Specifies the problem (i.e. fairness in WSN) we are addressing in this paper. Defines the key concepts, such a fairness in relation to power consumption and efficiency of power consumption as well as addresses pitfalls such as minimal power consumption which is not addressed by this paper.
-\subsection{System Model}
-The system model is explained. All assumptions required for the model are specified.
-
-Important performance metrics, such as:
-\begin{itemize}
-\item \texttt{time to death of the first node}(TTFD)
-\item \texttt{average node lifetime} (ANL)
-\item \texttt{cut vertex lifetime} and its optimality
-\item additional resource requirements such as \texttt{number of Steiner points} and additional nodes
-\item $L$ - maximum power consumption rate
-\item $K$ - number of new Steiner Points
-\item $\alpha$ - minimum standard deviation of power consumption rates given $K$ Steiner points
-\end{itemize}
-are defined in this section.
