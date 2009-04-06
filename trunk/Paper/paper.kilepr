@@ -3,7 +3,7 @@ img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif
 kileprversion=2
 kileversion=2.0
-lastDocument=introduction.tex
+lastDocument=relatedWork.tex
 masterDocument=
 name=paper
 pkg_extIsRegExp=false
@@ -17,7 +17,7 @@ QuickBuild=
 
 [item:analysis.tex]
 archive=true
-column=70
+column=31
 encoding=UTF-8
 highlight=LaTeX
 line=7
@@ -26,7 +26,7 @@ order=4
 
 [item:approach.tex]
 archive=true
-column=456
+column=15
 encoding=UTF-8
 highlight=LaTeX
 line=8
@@ -44,10 +44,10 @@ order=1
 
 [item:paper.bib]
 archive=true
-column=15
+column=18
 encoding=UTF-8
 highlight=BibTeX
-line=50
+line=99
 open=true
 order=5
 
@@ -62,18 +62,18 @@ order=-1
 
 [item:paper.tex]
 archive=true
-column=0
+column=448
 encoding=UTF-8
 highlight=LaTeX
-line=46
+line=44
 open=true
 order=0
 
 [item:relatedWork.tex]
 archive=true
-column=41
+column=20
 encoding=UTF-8
 highlight=LaTeX
-line=0
+line=6
 open=true
 order=2

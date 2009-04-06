@@ -1,5 +1,13 @@
 \section{Related Work}\label{Related Work}
 
+NOTES:
+
+Transmission Range: Gao200675, Song2009
+Additional resources: 1495854, Tang2006490
+Fair energy: 4351517
+
+
+
 Connectivity is by far the most important criterion involved in WSN design decisions. Extensive research has been conducted to:
 \begin{itemize}
 \item identify ways to interconnect all nodes with a minimum number of links. The Minimum Spanning Tree (MST) adopted from graph theory and general networking addresses this issue.
@@ -9,10 +17,11 @@ Connectivity is by far the most important criterion involved in WSN design decis
 
 Cheng \cite{RelaySensor} proposed a relay node placement algorithm using the minimum number of relay nodes, so that the distance between each hop is less than or equal to the common transmission range. This problem is similar to the Steiner Minimum Tree with minimum number of Steiner Points and bounded edge-length (SMT-MSPBEL). They proposed a 3-approximation algorithm and a 2.5 approximation algorithm. The 2.5 approximation algorithm is a randomized algorithm whose performance is faster than 3-approximation algorithm.
 
-Lloyd \cite{1191701} discusses two strategies for ensuring a WSN is fully connected.  The first is a single-tiered node placement strategy in which every node is connected via some path consisting of either sensor nodes or relay nodes.  The length between a sensor node and any other node must be <= r, while the length between two relay nodes can be of distance R, where R is defined as R >= r.  Node placement is achieved using Steiner Tree nodes.
+Lloyd \cite{1191701} discusses two strategies for ensuring a WSN is fully connected.  The first is a single-tiered node placement strategy in which every node is connected via some path consisting of either sensor nodes or relay nodes.  The length between a sensor node and any other node must be $ \leq r$, while the length between two relay nodes can be of distance $R$, where $R$ is defined as $R \geq r$.  Node placement is achieved using Steiner Tree nodes.
 
 The second strategy discussed is what they call a two-tiered node placement strategy, in which any two nodes of the WSN are fully connected by all relay nodes. That is, between any two sensor nodes in the WSN there exists a path by which every intermediary node is a relay node.
 
 Recent research on relay node placement in Wireless Sensor Networks mostly focuses on connectivity establishment (Estrin et al. \cite{940390}). Connectivity is one of the most crucial issue, since most of the actions are taken collaboratively. In addition, sensors are small battery operated devices. Usually after the deployment of wireless sensor networks, it is impossible to access a sensor node and change the battery. Once the battery is depleted the node dies. The most important source of energy consumption in sensor networks is message transmission. The energy required to transmit data is directly proportional to $r^4$ where $r$ is the distance between source and destination.
 
 NEED TO REFER TO THIS PAPER\cite{596303}.
+\cite{Gao200675}
