@@ -1,25 +1,43 @@
 \section{Proposed Approach}\label{approach}
 
-\subsection{Problem Formulation}
-Specifies the problem (i.e. fairness in WSN) we are addressing in this paper. Defines the key concepts, such a fairness in relation to power consumption and efficiency of power consumption as well as addresses pitfalls such as minimal power consumption which is not addressed by this paper.
 \subsection{System Model}
-The system model is explained. All assumptions required for the model are specified.
+The model and algorithms described in this paper make the following assumptions:
 
-Important performance metrics, such as:
 \begin{itemize}
-\item \texttt{time to death of the first node}(TTFD)
-\item \texttt{average node lifetime} (ANL)
-\item \texttt{cut vertex lifetime} and its optimality
-\item additional resource requirements such as \texttt{number of Steiner points} and additional nodes
-\item $L$ - maximum power consumption rate
-\item $K$ - number of new Steiner Points
-\item $\alpha$ - minimum standard deviation of power consumption rates given $K$ Steiner points
+\item Each sensor/node sends an equal amount of data per time unit.
+\item Each node can receive an arbitrary amount of data per time unit.
+\item Each node can store an arbitrary amount of data without energy penalties. This assumption enables this model to ignore data transmission bottlenecks.
+\item The transmission range of each sensor node does not exceed the maximum transmission range $T$.
+\item Only nodes within transmission range of each other are connected (i.e. have an edge between each other in the network).
+\item A node's energy dissipation per bit transmitted (according to the first order radio model \cite{820485}).
+\item Transmitting a bit over distance $d$ requires energy $d^2$.
+\item Sensor nodes have a fixed location. Their location may not change during the lifetime of the network.
+\item Relay nodes are movable. Their location is flexible during the lifetime of the network.
+\item Relay nodes can be added to the original network.
 \end{itemize}
-are defined in this section.
+
+\subsection{Problem Formulation}
+
+In the Minimal Fair Energy Consumption with Minimal Additional Resources (MFEC-MAR) problem the goal, given a wireless sensor network represented as a graph $G=(V \cup S,E)$, is to equalize the power consumption rate $PCR$ of all nodes in $G$. That is $PCR(v_1)=PCR(v_2)=PCR(v_3)=...=PCR(v_n)$ where $n=|V \cup S|$ denotes the number of vertices/nodes in $G$. The set of vertices in $G$ is composed of a set of fixed vertices $V$ (i.e. sensor nodes) and a set of moveable vertices $S$ (i.e. relay nodes). The edges $E$ in $G$ are subject to the maximum transmission range $T$ of the nodes. It is furthermore the goal of MFEC-MAR to minimize overall power consumption of the network such that $\sum_{i=1}^{n} PCR(v_i)$ is minimal. The set of moveable vertices $S$ is adjustable in $|S|$ and is minimized as well. Hence, MFEC-MAR is a multi-objective optimization problem (MOP). Formally, MFEC-MAR is defined as follows:
+
+\begin{itemize}
+ \item \textbf{Input:} A sensor network $G = (V, E)$, where $V$ is a set of fixed vertices and $E$ is the set of edges between vertices if they are within transmission range $T$, a fairness measure $\alpha$, a maximum power consumption rate $P$
+
+\item \textbf{Output:} A non-disconnected network $G' = (V \cup S, E')$ such that:
+	\begin{itemize}
+		\item $STDEV( PCR_{v \in |V \cup S|} v) \leq \alpha$
+		\item $\forall_{v \in |V \cup S|} PCR(v) \leq P$
+		\item $\sum_{v \in |V \cup S|} PCR(v)$ is minimal
+		\item $|S|$ is minimal
+	\end{itemize}
+\end{itemize}
+
+For the remainder of this paper, whenever we refer to fairness of power consumption rates ($PCR$), we denote this fairness measure $\alpha$ as the maximum allowable standard deviation of power consumption rates.
 
 
-\subsection{Algorithms for Fairness in WSNs}
+\subsection{Algorithms for MFEC-MAR (Fairness in WSNs)}
 In this section we will explain our two step approach to solving the fairness problem in WSNs.
+
 \subsubsection{Connecting Nodes}
 This section explains how to connect and initially disconnected set of nodes using the Steiner Minimum Tree (SMT) algorithm.
 \subsubsection{Optimizing Node Location}
