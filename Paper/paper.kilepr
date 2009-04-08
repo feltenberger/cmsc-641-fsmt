@@ -3,7 +3,7 @@ img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif
 kileprversion=2
 kileversion=2.0
-lastDocument=relatedWork.tex
+lastDocument=approach.tex
 masterDocument=
 name=paper
 pkg_extIsRegExp=false
@@ -22,16 +22,16 @@ encoding=UTF-8
 highlight=LaTeX
 line=7
 open=true
-order=4
+order=2
 
 [item:approach.tex]
 archive=true
-column=15
+column=64
 encoding=UTF-8
 highlight=LaTeX
-line=8
+line=28
 open=true
-order=3
+order=1
 
 [item:introduction.tex]
 archive=true
@@ -39,17 +39,17 @@ column=325
 encoding=UTF-8
 highlight=LaTeX
 line=10
-open=true
+open=false
 order=1
 
 [item:paper.bib]
 archive=true
-column=583
+column=21
 encoding=UTF-8
 highlight=BibTeX
-line=124
+line=157
 open=true
-order=5
+order=3
 
 [item:paper.kilepr]
 archive=true
@@ -62,18 +62,18 @@ order=-1
 
 [item:paper.tex]
 archive=true
-column=448
+column=17
 encoding=UTF-8
 highlight=LaTeX
-line=44
+line=1
 open=true
 order=0
 
 [item:relatedWork.tex]
 archive=true
-column=172
+column=235
 encoding=UTF-8
 highlight=LaTeX
-line=13
+line=8
 open=true
-order=2
+order=4
