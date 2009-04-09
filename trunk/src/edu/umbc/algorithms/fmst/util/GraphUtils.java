@@ -361,5 +361,28 @@ public class GraphUtils {
         result.setLocation(nx, ny);
         return result;
     }
+    
+    /**
+     * calculates the slope of the line going through two points
+     */
+    public static double slope(Point a, Point b)
+	{
+		return (a.y -b.y)/(a.x-b.x);
+	}
+    
+    /**
+     * calculates the center point of the circle which has points a,b and c on its circumference
+     */
+    public static Point center(Point a, Point b, Point c)
+	{
+		double ma = slope(b,a);
+		double mb = slope(c,b);
+
+		Point center = new Point(0.0,0.0);
+		center.x = (ma * mb *(a.y - c.y) + mb * (a.x + b.x) - ma * (b.x + c.x)) / (2 * (mb - ma));
+		center.y = -1 * (1/ma)*(center.x - (a.x + b.x) / 2) + (a.y + b.y) / 2;
+
+		return center;
+	}
 
 }

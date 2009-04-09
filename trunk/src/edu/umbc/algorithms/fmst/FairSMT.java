@@ -1013,52 +1013,69 @@ public class FairSMT extends JPanel implements Runnable {
 	 */
 	public void makeFair()
 	{
-		/* overhead of our data structure - construct the list of neighbors */
+		//NOTE: adjust the constants (m
+		
+		//overhead of our data structure - construct the list of neighbors
 		if (runOnce)
 		{
 			makeNeighborList();
 			runOnce = false;
 		}
-		moveSteinerNodes();
-		/*
-		//at this point we have already loaded the random points, and computed the steiner minimum tree:
-		int k = 10;
-
-		int numSteinerPoints = this.numNodesInSMT - this.numNonSteinerNodes;
-
-		double prevSTDEV = Double.POSITIVE_INFINITY;
-		while (true)
-		{
-			double currentSTDEV = getStandardDevOfPCR();
-			moveSteinerNodes();
-			if (numSteinerPoints < k)
+		boolean showPrompt = true;  //show a prompt when target StDev is reached
+		
+		//do this loop while we still have resources to add
+		for (int i = (numNodesInSMT - numNonSteinerNodes); i < Constants.MAX_RELAY_NODES; i++)
+		{			
+			// do the while loop until the system has stabilized
+			double stdev = Double.POSITIVE_INFINITY;
+			while (stdev > getStandardDevOfPCR())
 			{
-				//addFairSteinerNode();
-				//numSteinerPoints++;
+				stdev = getStandardDevOfPCR();
+				moveSteinerNodes_geometric();			
+				try {
+					repaint();
+					Thread.sleep(sleepTime * 2); 
+				} catch (Exception ignored) { }
 			}
-			try {
-				repaint();
-				Thread.sleep(sleepTime);
-			} catch (Exception ignored) { }	
+			log.info("Done with moveSteinerNodes_geometric.");
+
+			addFairSteinerNode();
+			log.info("Done with addFairSteinerNode. Added "+i+"/"+Constants.MAX_RELAY_NODES + " relay nodes.");
+
 			moveSteinerNodes();
-
-
-			if (currentSTDEV < prevSTDEV) prevSTDEV = currentSTDEV;
-			else
-			{
-				//undo_changes
-				break;
+			log.info("Done with moveSteinerNodes.");
+			
+			//check if the target StDev is reached
+			if (getStandardDevOfPCR()< Constants.TARGET_STDEV && showPrompt)
+			{			
+				int n = JOptionPane.showConfirmDialog(
+						null,
+						"Target Standard Deviation of "+ Constants.TARGET_STDEV +" reached.\n" +
+						"The actual StDev is " + getStandardDevOfPCR() +" using " + i + " additional relay nodes\n\n"+
+						"Do you want to continue and ignore future messages?\n",
+						"Target STDEV reached",
+						JOptionPane.YES_NO_OPTION);
+				if (n == 1) //if no is pressed;
+				{
+					return;
+				}
+				showPrompt = false;			
 			}
-
-		}*/
+			
+			//print some stats - this probably should be replace by writing some
+			//stats to a file (i.e. for each k value)
+			printStatistics();
+		}
+		
 		repaint();
-		log.info("DONE!");
+		printStatistics();
+		log.info("Done making the graph fair. I did my best with the constraints given.");
 	}
 
 	/**
 	 * Attempts to make the graph more fair
 	 */
-	public void makeFair2()
+	public void makeFair_old()
 	{			
 		log.info("starting makeFair()");
 		boolean showPrompt = true;
@@ -1070,14 +1087,14 @@ public class FairSMT extends JPanel implements Runnable {
 		}
 
 		int newNodeCount = 0;		
-		while (newNodeCount < Constants.MAX_NEW_STEINER_NODES)
+		while (newNodeCount < Constants.MAX_RELAY_NODES)
 		{		
 			double stdev = getStandardDevOfPCR();
 			int converge = 0;
 
-			while (stdev > Constants.MAX_STDEV && converge <= Constants.CONVERGENCE_CUTOFF)
+			while (stdev > Constants.TARGET_STDEV && converge <= Constants.CONVERGENCE_CUTOFF)
 			{
-				moveSteinerNodes();
+				moveSteinerNodes_geometric();
 				double temp = getStandardDevOfPCR();
 				if (Math.abs(temp-stdev) < Constants.CONVERGENCE_THRESHOLD)
 				{
@@ -1090,9 +1107,9 @@ public class FairSMT extends JPanel implements Runnable {
 				stdev = temp;							
 			}
 			printStatistics();
-			if(stdev <= Constants.MAX_STDEV)
+			if(stdev <= Constants.TARGET_STDEV)
 			{
-				System.out.println("Target STDEV (<"+ Constants.MAX_STDEV +") reached! The STDEV = " + stdev);
+				System.out.println("Target STDEV (<"+ Constants.TARGET_STDEV +") reached! The STDEV = " + stdev);
 
 				if (showPrompt)
 				{
@@ -1117,17 +1134,17 @@ public class FairSMT extends JPanel implements Runnable {
 			log.info("Done moving Nodes");
 
 			// Add new nodes
-			if (newNodeCount < Constants.MAX_NEW_STEINER_NODES)
+			if (newNodeCount < Constants.MAX_RELAY_NODES)
 			{
 				newNodeCount++;
-				log.info("Adding new Node " + newNodeCount + "/"+Constants.MAX_NEW_STEINER_NODES);
+				log.info("Adding new Node " + newNodeCount + "/"+Constants.MAX_RELAY_NODES);
 				addFairSteinerNode();				
 			}
 			printStatistics();
 			converge = 0;
-			while (stdev > Constants.MAX_STDEV && converge <= Constants.CONVERGENCE_CUTOFF)
+			while (stdev > Constants.TARGET_STDEV && converge <= Constants.CONVERGENCE_CUTOFF)
 			{				
-				moveSteinerNodes();
+				moveSteinerNodes_geometric();
 				double temp = getStandardDevOfPCR();
 				if (Math.abs(temp-stdev) < Constants.CONVERGENCE_THRESHOLD)
 				{
@@ -1283,13 +1300,14 @@ public class FairSMT extends JPanel implements Runnable {
 		}
 	}
 
-	private double slope(Point a, Point b)
-	{
-		return (a.y -b.y)/(a.x-b.x);
-	}
-
-
-	private void moveSteinerNodes()
+	/**
+	 * Moves true Steiner Nodes (i.e. movable nodes that have exactly 3 neighbors) by assuming that
+	 * the 3 neighbors are points on a circle. The Steiner Node is then moved to the center of this
+	 * circle. Since the 3 points can be organized in 3! different ways (i.e. p1,p2,p3; p1,p3,p2; 
+	 * ....p3,p2,p1), the arrangement that minimizes the Steiner node's PCR (or the radius of the
+	 * circle) is chosen. 
+	 */
+	private void moveSteinerNodes_geometric()
 	{
 		List<Point> list = new ArrayList<Point>();
 
@@ -1304,87 +1322,90 @@ public class FairSMT extends JPanel implements Runnable {
 		{
 			Point steiner = (Point) list.get(i);
 
+			//only do this on real Steiner Nodes (i.e. movable nodes with 3 neighbors)
 			if (steiner.neighbors.size() != 3)
 			{
-				log.error("not enough neighbors");
+				//log.info("Cannot use moveSteinerNodes_geometric - not enough or too many neighbors");
 			}
 			else
 			{
-				Point temp = new Point(0.0,0.0);
+				Point temp = new Point(steiner.x,steiner.y);
 				Point p1 = steiner.neighbors.get(0);
 				Point p2 = steiner.neighbors.get(1);
 				Point p3 = steiner.neighbors.get(2);
 
-				Point center = center(p1,p2,p3);
+				double currentPCR = steiner.getPCR(); //use the lowest PCR			
+				//##########################################				
+				Point center = GraphUtils.center(p1,p2,p3);
 				steiner.x = center.x;
 				steiner.y = center.y;
-				temp.x = center.x;
-				temp.y = center.y;
-				double stdev = steiner.getPCR(); //use the lowest PCR			
-				center = center(p1,p3,p2);
-				steiner.x = center.x;
-				steiner.y = center.y;
-				if (stdev > steiner.getPCR())
+				if (currentPCR > steiner.getPCR())
 				{
 					temp.x = center.x;
 					temp.y = center.y;
-					stdev = steiner.getPCR();
-				}
-				center = center(p2,p1,p3);
+					currentPCR = steiner.getPCR();
+				}				
+				//##########################################
+				center = GraphUtils.center(p1,p3,p2);
 				steiner.x = center.x;
 				steiner.y = center.y;
-				if (stdev > steiner.getPCR())
+				if (currentPCR > steiner.getPCR())
 				{
 					temp.x = center.x;
 					temp.y = center.y;
-					stdev = steiner.getPCR();
+					currentPCR = steiner.getPCR();
 				}
-				center = center(p2,p3,p1);
+				//##########################################
+				center = GraphUtils.center(p2,p1,p3);
 				steiner.x = center.x;
 				steiner.y = center.y;
-				if (stdev > steiner.getPCR())
+				if (currentPCR > steiner.getPCR())
 				{
 					temp.x = center.x;
 					temp.y = center.y;
-					stdev = steiner.getPCR();
+					currentPCR = steiner.getPCR();
 				}
-				center = center(p3,p1,p2);
+				//##########################################
+				center = GraphUtils.center(p2,p3,p1);
 				steiner.x = center.x;
 				steiner.y = center.y;
-				if (stdev > steiner.getPCR())
+				if (currentPCR > steiner.getPCR())
 				{
 					temp.x = center.x;
 					temp.y = center.y;
-					stdev = steiner.getPCR();
+					currentPCR = steiner.getPCR();
 				}
-				center = center(p3,p2,p1);
+				//##########################################
+				center = GraphUtils.center(p3,p1,p2);
 				steiner.x = center.x;
 				steiner.y = center.y;
-				if (stdev > steiner.getPCR())
+				if (currentPCR > steiner.getPCR())
 				{
 					temp.x = center.x;
 					temp.y = center.y;
-					stdev = steiner.getPCR();
+					currentPCR = steiner.getPCR();
 				}
-				
-				try {
-					repaint();
-					Thread.sleep(sleepTime);
-				} catch (Exception ignored) { }
+				//##########################################
+				center = GraphUtils.center(p3,p2,p1);
+				steiner.x = center.x;
+				steiner.y = center.y;
+				if (currentPCR > steiner.getPCR())
+				{
+					temp.x = center.x;
+					temp.y = center.y;
+					currentPCR = steiner.getPCR();
+				}
+
+				// set the best temporary point that minimizes PCR as
+				//the new steiner point
+				steiner.x = temp.x;
+				steiner.y = temp.y;				
 			}
 		}
 	}
-	private Point center(Point a, Point b, Point c)
-	{
-		double ma = slope(b,a);
-		double mb = slope(c,b);
 
-		Point center = new Point(0.0,0.0);
-		center.x = (ma * mb *(a.y - c.y) + mb * (a.x + b.x) - ma * (b.x + c.x)) / (2 * (mb - ma));
-		center.y = -1 * (1/ma)*(center.x - (a.x + b.x) / 2) + (a.y + b.y) / 2;
 
-		return center;
-	}
+
 
 	private void moveSteinerNodes_old()
 	{
@@ -1423,7 +1444,7 @@ public class FairSMT extends JPanel implements Runnable {
 				moveTowards(source, target);
 				Point lowestPCRNeighbor = source.getLowestPCRNeighbor();
 
-				//moveAway(source, lowestPCRNeighbor);			
+				moveAway(source, lowestPCRNeighbor);			
 				try
 				{
 					repaint();
@@ -1466,25 +1487,24 @@ public class FairSMT extends JPanel implements Runnable {
 	/**
 	 *  Added by Fatih Senel
 	 */
-	private void moveSteinerNodes2() {
-
-		// move around the steiner nodes to make it more fair
-		//double cSTDDEV = getStandardDevOfPCR();
-
+	private void moveSteinerNodes()
+	{
 		MaxHeap heap = new MaxHeap();
-		for (int i = 0; i < numNodesInSMT; i++) {
+		for (int i = 0; i < numNodesInSMT; i++)
+		{
 			Point p1 = this.minPoints.get(i);
-			if(p1.isSteiner())
-				heap.add(p1);
+			if(p1.isSteiner()) heap.add(p1);
 		}
 
 		for (int i = 0; i < heap.size(); i++) {
 			Point source = (Point) heap.extractMax();
-			if(source.getPCR() > Constants.MAX_PCR_ALLOWED){
+			//if(source.getPCR() > Constants.MAX_PCR_ALLOWED)
+			{
 				Point target = source.getFarthestNeighbor();                
 				moveTowards(source, target);
-				Point lowestPCRNeighbor = source.getLowestPCRNeighbor();
-				moveAway(source, lowestPCRNeighbor);
+				
+				//Point lowestPCRNeighbor = source.getLowestPCRNeighbor();
+				//moveAway(source, lowestPCRNeighbor);
 				try {
 					repaint();
 					Thread.sleep(sleepTime);
@@ -1492,9 +1512,6 @@ public class FairSMT extends JPanel implements Runnable {
 			}
 			heap.rebuildHeap();
 		}
-		//cSTDDEV = getStandardDevOfPCR();
-		//System.out.println(cSTDDEV);
-
 	}
 
 	/**
@@ -1524,6 +1541,9 @@ public class FairSMT extends JPanel implements Runnable {
 
 
 
+	/**
+	 * moves a Steiner Point towards the furthest neighbor
+	 */
 	private void moveTowards(Point source, Point target) {
 
 		Point2D s = new Point2D.Double();
@@ -1539,21 +1559,22 @@ public class FairSMT extends JPanel implements Runnable {
 		double previousPCR = source.getPCR();
 
 		int distance = (int) Math.floor(GraphUtils.euclideanDistance(source.x, source.y, target.x, target.y));
-		//for (int i = 0; i < distance; i += step_size) {
-		Point2D currentLocation = GraphUtils.getCoordinates(source.x, source.y, target.x, target.y, step_size);
-		source.x = currentLocation.getX();
-		source.y = currentLocation.getY();
-		double currentPCR = source.getPCR();
+		for (int i = 0; i < distance; i += step_size)
+		{			
+			Point2D currentLocation = GraphUtils.getCoordinates(source.x, source.y, target.x, target.y, step_size);
+			source.x = currentLocation.getX();
+			source.y = currentLocation.getY();
+			double currentPCR = source.getPCR();
 
-		if (currentPCR < previousPCR) {
-			previousPCR = currentPCR;
-			previousLocation = currentLocation;
-		} else {
-			//move backwards
-			source.x = previousLocation.getX();
-			source.y = previousLocation.getY();
+			if (currentPCR < previousPCR) {
+				previousPCR = currentPCR;
+				previousLocation = currentLocation;
+			} else {
+				//move backwards
+				source.x = previousLocation.getX();
+				source.y = previousLocation.getY();
+			}
 		}
-		//}
 	}
 
 	private double getStandardDevOfPCR() {
@@ -1699,9 +1720,9 @@ public class FairSMT extends JPanel implements Runnable {
 		g.drawString("Total", 115, 90);g.drawString("=", 160, 90); g.drawString("" + total.intValue(), 175, 90);
 
 
-		g.drawString("Max Stdev", 225, 15); g.drawString("=", 290, 15); g.drawString("" + Constants.MAX_STDEV.intValue(), 305, 15);
+		g.drawString("Max Stdev", 225, 15); g.drawString("=", 290, 15); g.drawString("" + Constants.TARGET_STDEV.intValue(), 305, 15);
 		g.drawString("Max PCR", 225, 30);g.drawString("=", 290, 30); g.drawString("" + Constants.MAX_PCR_ALLOWED.intValue(), 305, 30);
-		g.drawString("Max New", 225, 45);g.drawString("=", 290, 45); g.drawString("" + Constants.MAX_NEW_STEINER_NODES, 305, 45);
+		g.drawString("Max New", 225, 45);g.drawString("=", 290, 45); g.drawString("" + Constants.MAX_RELAY_NODES, 305, 45);
 		g.drawString("T Range", 225, 60);g.drawString("=", 290, 60); g.drawString("" + Constants.TRANSMISSION_RANGE.intValue(), 305, 60);
 		g.drawString("Conv. Cut", 225, 75);g.drawString("=", 290, 75); g.drawString("" + Constants.CONVERGENCE_CUTOFF, 305, 75);
 		g.drawString("Conv. Thr", 225, 90);g.drawString("=", 290, 90); g.drawString("" + Constants.CONVERGENCE_THRESHOLD, 305, 90);
