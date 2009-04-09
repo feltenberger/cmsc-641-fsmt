@@ -8,7 +8,7 @@ package edu.umbc.algorithms.fmst;
 public interface Constants {
     Double TARGET_STDEV = 100.0;  //to be need to changes
     Double MAX_PCR_ALLOWED = 4000.0;
-    int MAX_RELAY_NODES = 50;
+    int MAX_RELAY_NODES = 5;
     Double TRANSMISSION_RANGE = Math.sqrt(MAX_PCR_ALLOWED);
     int CONVERGENCE_CUTOFF = 5;  //when we see the same STDEV  CONVERGENCE_CUTOFF times in a row, the we converged
     int CONVERGENCE_THRESHOLD = 10;  //the difference of the standard deviation between loops must be greater

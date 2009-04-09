@@ -1008,7 +1008,8 @@ public class FairSMT extends JPanel implements Runnable {
 		paint(g);
 	}
 
-	/* Given a set of points V, a number of maximum relay nodes k and a desired fairness measure alpha 
+	/**
+	 * Given a set of points V, a number of maximum relay nodes k and a desired fairness measure alpha 
 	 * Find a connected graph that achieves fairness >= alpha with additional nodes<=k
 	 */
 	public void makeFair()
@@ -1408,6 +1409,10 @@ public class FairSMT extends JPanel implements Runnable {
 
 
 
+	/**
+	 * old version of the move steiner nodes method.
+	 */
+	@SuppressWarnings("all")
 	private void moveSteinerNodes_old()
 	{
 		MaxHeap heap = new MaxHeap();
