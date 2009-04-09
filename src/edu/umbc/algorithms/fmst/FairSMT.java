@@ -1013,7 +1013,7 @@ public class FairSMT extends JPanel implements Runnable {
 	 */
 	public void makeFair()
 	{
-		//NOTE: adjust the constants (m
+		//NOTE: adjust the constants (MAX_RELAY_NODES and TARGET_STDEV in Constants.java)
 		
 		//overhead of our data structure - construct the list of neighbors
 		if (runOnce)
@@ -1024,7 +1024,8 @@ public class FairSMT extends JPanel implements Runnable {
 		boolean showPrompt = true;  //show a prompt when target StDev is reached
 		
 		//do this loop while we still have resources to add
-		for (int i = (numNodesInSMT - numNonSteinerNodes); i < Constants.MAX_RELAY_NODES; i++)
+		//for (int i = (numNodesInSMT - numNonSteinerNodes); i < Constants.MAX_RELAY_NODES; i++)
+		for (int i = 0; i < Constants.MAX_RELAY_NODES; i++)
 		{			
 			// do the while loop until the system has stabilized
 			double stdev = Double.POSITIVE_INFINITY;
