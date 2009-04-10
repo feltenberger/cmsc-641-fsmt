@@ -77,13 +77,18 @@ public class FairSMTViz extends JFrame {
 					return;
 				}
 				int heightAndWidth = Integer.parseInt(dialog.getValue());
-				
+
 				// get the number of nodes
 				dialog = new SimpleDialog(FairSMTViz.this, true, "How many nodes to start with?");
 				int numNodes = Integer.parseInt(dialog.getValue());
-				
+
+				// get the k value.
+				dialog = new SimpleDialog(FairSMTViz.this, true, "What's the maximum additional relay nodes (i.e. k value)?");
+				int k = Integer.parseInt(dialog.getValue());
+
 				// construct and load the new smt
 				FairSMT smt = new FairSMT(heightAndWidth, heightAndWidth, numNodes);
+				smt.setMaxRelayNodes(k);
 				FairSMTViz.this.loadNewSMT(smt, true);
 			}
 		});

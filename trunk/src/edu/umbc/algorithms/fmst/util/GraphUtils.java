@@ -385,4 +385,130 @@ public class GraphUtils {
 		return center;
 	}
 
+	/**
+	 * Gets the standard deviation of the power consumption rate.
+	 * 
+	 * @param minPoints
+	 * @param numNodesInSMT
+	 * @return standard deviation of power consumption rate in graph.
+	 */
+	public static double getStandardDevOfPCR(List<Point>minPoints, int numNodesInSMT) {
+		double mean = getMeanPCR(minPoints, numNodesInSMT);
+		double variance = 0;
+		int counter = 0;
+		for (int i = 0; i < numNodesInSMT; i++) {
+			Point p1 = minPoints.get(i);
+			//if(p1.isSteiner())
+			{
+				variance += Math.pow((p1.getPCR()-mean),2);
+				counter++;
+			}
+		}
+		return Math.sqrt(variance/counter);
+	}
+
+	/**
+	 * Gets the average power consumption rate of all points in the graph.
+	 * 
+	 * @param minPoints
+	 * @param numNodesInSMT
+	 * @return average power consumption rate of nodes in the graph
+	 */
+	public static double getMeanPCR(List<Point>minPoints, int numNodesInSMT) {
+		double avg = 0;
+		int counter = 0;
+		for (int i = 0; i < numNodesInSMT; i++) {
+			Point p1 = minPoints.get(i);
+			//if(p1.isSteiner())
+			{
+				avg += p1.getPCR();
+				counter++;
+			}
+		}
+		return avg/counter;
+	}
+
+	/**
+	 * Dumps statistics.
+	 */
+	public static void printStatistics(FairSMT smt) {
+		List<Point>minPoints = smt.getMinPoints();
+		int numNodesInSMT = smt.getNumNodesInSMT();
+		double max = Double.NEGATIVE_INFINITY;
+		double min = Double.POSITIVE_INFINITY;
+		double total = 0;
+		int numPoints = 0;
+		for (Point p : minPoints )
+		{
+			double temp = p.getPCR();
+			if (temp > max) max = temp;
+			if (temp < min) min = temp;
+
+			total += temp;
+			numPoints++;				
+			//System.out.println("PCR = " + p.getPCR());
+		}
+		System.out.println("STDEV     = " + GraphUtils.getStandardDevOfPCR(minPoints, numNodesInSMT));		
+		System.out.println("MAX POWER = " + max);
+		System.out.println("MIN POWER = " + min);
+		System.out.println("AVG POWER = " + total / numPoints);
+		System.out.println("TOTAL POW = " + total);
+		System.out.println("K VALUE   = " + smt.getMaxRelayNodes());
+		System.out.println("TRGT STDD = " + smt.getTargetPCR());
+		System.out.println("TOTAL POW = " + total);
+		System.out.println("------------------------------------");
+	}
+
+	/**
+	 * appends the results of a make fair run to the provided string.
+	 * 
+	 * @param results
+	 * @param smt
+	 * @param runNumber the iteration
+	 * @return
+	 */
+	public static String appendResults(String results, FairSMT smt, int runNumber) {
+		StringBuffer sb = new StringBuffer(results).append("\n");
+
+		List<Point>minPoints = smt.getMinPoints();
+		int numNodesInSMT = smt.getNumNodesInSMT();
+		double max = Double.NEGATIVE_INFINITY;
+		double min = Double.POSITIVE_INFINITY;
+		double total = 0;
+		int numPoints = 0;
+		for (Point p : minPoints )
+		{
+			double temp = p.getPCR();
+			if (temp > max) max = temp;
+			if (temp < min) min = temp;
+
+			total += temp;
+			numPoints++;				
+			//System.out.println("PCR = " + p.getPCR());
+		}
+
+		double stdDev = GraphUtils.getStandardDevOfPCR(minPoints, numNodesInSMT);
+		// tab delimited list of values
+		// run num	std dev	max pcr	min pcr	avg pcr	total pcr	k	target pcr
+
+		// the run number
+		sb.append(runNumber).append("\t")
+		// standard deviation
+		.append(stdDev).append("\t")
+		// maximum consuming node
+		.append(max).append("\t")
+		// minimum consuming node
+		.append(min).append("\t")
+		// average power consumption
+		.append(total / numPoints).append("\t")
+		// total power consumption
+		.append(total).append("\t")
+		// k value
+		.append(smt.getMaxRelayNodes()).append("\t")
+		// target power consumption rate.
+		.append(smt.getTargetPCR()).append("\t")
+		;
+
+		return sb.toString();
+	}
 }

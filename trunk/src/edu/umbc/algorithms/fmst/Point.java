@@ -9,7 +9,7 @@ import edu.umbc.algorithms.fmst.util.GraphUtils;
 /**
  * @author dave
  */
-@SuppressWarnings("serial")
+@SuppressWarnings("all")
 public class Point implements Serializable, Comparable {
     public static final int POINT_SIZE = 6;
     public double x;
@@ -105,7 +105,7 @@ public class Point implements Serializable, Comparable {
      * @return maximum edge weight to the power 2
      */
     public double getPCR() {
-    	double max = -1;
+    	double max = Double.NEGATIVE_INFINITY;
         for (int i = 0; i < neighbors.size(); i++) {
             Point neighbor = neighbors.get(i);
             double dist = GraphUtils.euclideanDistance(x, y, neighbor.x, neighbor.y);
@@ -145,7 +145,7 @@ public class Point implements Serializable, Comparable {
     
 
     public Point getFarthestNeighbor(){
-        double max = -1;
+        double max = Double.NEGATIVE_INFINITY;
         int index = -1;
         for (int i = 0; i < neighbors.size(); i++) {
             Point neighbor = neighbors.get(i);
