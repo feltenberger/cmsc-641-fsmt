@@ -489,7 +489,7 @@ public class GraphUtils {
 
 		double stdDev = GraphUtils.getStandardDevOfPCR(minPoints, numNodesInSMT);
 		// tab delimited list of values
-		// run num	std dev	max pcr	min pcr	avg pcr	total pcr	k	target pcr
+		// run num	std dev	max pcr	min pcr	avg pcr	total pcr	num terminal	k	target pcr
 
 		// the run number
 		sb.append(runNumber).append("\t")
@@ -503,6 +503,8 @@ public class GraphUtils {
 		.append(total / numPoints).append("\t")
 		// total power consumption
 		.append(total).append("\t")
+		// number of terminal nodes
+		.append(smt.getNumNonSteinerNodes()).append("\t")
 		// k value
 		.append(smt.getMaxRelayNodes()).append("\t")
 		// target power consumption rate.
