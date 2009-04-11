@@ -153,6 +153,13 @@ public class FairSMT extends JPanel implements Runnable {
 	 */
 	public FairSMT() { }
 
+	public FairSMT(int width, int height, int numNonSteinerNodes, int maxRelayNodes) {
+		this.width = width;
+		this.height = height;
+		this.numNonSteinerNodes = numNonSteinerNodes;
+		this.maxRelayNodes = maxRelayNodes;
+		init();
+	}
 	/**
 	 * @param width
 	 * @param height
@@ -1661,5 +1668,11 @@ public class FairSMT extends JPanel implements Runnable {
 	 */
 	public int getNumNodesInSMT() {
 		return this.numNodesInSMT;
+	}
+	/**
+	 * @return
+	 */
+	public int getNumNonSteinerNodes() {
+		return this.numNonSteinerNodes;
 	}
 }
