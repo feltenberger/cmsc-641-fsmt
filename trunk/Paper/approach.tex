@@ -11,6 +11,7 @@ The model and algorithms described in this paper make the following assumptions:
 \item Only nodes within transmission range of each other are connected (i.e. have an edge between each other in the network).
 \item A node's energy dissipation per bit transmitted (according to the first order radio model \cite{820485}).
 \item Transmitting a bit over distance $d$ requires energy $d^2$.
+\item The power consumption rate $PCR$ for a node $n$ is defined as $PCR(n) = \frac{\max_{v \in N}d(v)^2}{\textrm{unit time}}$, where $N$ is the set of neighbors of a node.
 \item Sensor nodes have a fixed location. Their location may not change during the lifetime of the network.
 \item Relay nodes are movable. Their location is flexible during the lifetime of the network.
 \item Relay nodes can be added to the original network.
@@ -18,17 +19,37 @@ The model and algorithms described in this paper make the following assumptions:
 
 \subsection{Problem Formulation}
 
-In the Minimal Fair Energy Consumption with Minimal Additional Resources (MFEC-MAR) problem the goal, given a wireless sensor network represented as a graph $G=(V \cup S,E)$, is to equalize the power consumption rate $PCR$ of all nodes in $G$. That is $PCR(v_1)=PCR(v_2)=PCR(v_3)=...=PCR(v_n)$ where $n=|V \cup S|$ denotes the number of vertices/nodes in $G$. The set of vertices in $G$ is composed of a set of fixed vertices $V$ (i.e. sensor nodes) and a set of moveable vertices $S$ (i.e. relay nodes). The edges $E$ in $G$ are subject to the maximum transmission range $T$ of the nodes. It is furthermore the goal of MFEC-MAR to minimize overall power consumption of the network such that $\sum_{i=1}^{n} PCR(v_i)$ is minimal. The set of moveable vertices $S$ is adjustable in $|S|$ and is minimized as well. Hence, MFEC-MAR is a multi-objective optimization problem (MOP). Formally, MFEC-MAR is defined as follows:
+We formulate the Minimal Fair Energy Consumption with Minimal Additional Resources (MFEC-MAR) problem as follows: Given a set of fixed sensor nodes $S$, find a minimal set of relay sensor nodes $R$ such that the power consumption rate $PCR$ is equal for each node $v \in \{S \cup R\}$, that is $\forall_{i=0}^{n=|S \cup R|} PCR(v_i) = PCR(v_2)=...=PCR(v_n)$ The induced graph $G=(S \cup R,E)$ must be connected, where an edge $(u,v) \in E$ if $u$ is within transmission range $T_v$ of $v$ and $v$ is within transmission range $T_u$ of $u$. A node $u$ is within transmission range of $v$ if  $PCR(u)\leq distance(u,v)^2$.
+Formally, MFEC-MAR is defined as follows:
+\begin{itemize}
+ \item \textbf{Input:} A set of fixed sensor nodes $S$ in Euclidean space.
+\item \textbf{Output:} A connected network $G = (S \cup R, E)$ such that:
+	\begin{itemize}
+		\item $R$ is the set of introduced relay nodes such that:
+		\begin{itemize}
+		\item $|R|$ is minimal
+		\item $\forall_{i=0}^{n=|S \cup R|} PCR(v_i) = PCR(v_2)=...=PCR(v_n)$
+		\end{itemize}
+		\item $G$ is connected
+		\item  $\sum_{v \in |S \cup R|} PCR(v)$ is minimal
+	\end{itemize}
+\end{itemize}
+
+The Minimal Fair Energy Consumption with Minimal Additional Resources Approximation (MFEC-MAR-Approx) problem aims to find an approximate solution to the MFEC-MAR problem. In the latter part of this paper, we will give an algorithm for MFEC-MAR-Approx. The MFEC-MAR-Approx problem is defined as follows:
+
+Given a set of fixed sensor nodes $S$, an allowable standard deviation $\alpha$ and a maximum number of relay nodes $k$, find a set of relay sensor nodes $R$, where $|R|\leq k$, such that the power consumption rates $PCR$ for all nodes is within $\alpha$. The induced graph $G=(S \cup R,E)$ must be connected, where an edge $(u,v) \in E$ if $u$ is within transmission range $T_v$ of $v$ and $v$ is within transmission range $T_u$ of $u$. A node $u$ is within transmission range of $v$ if  $PCR(u)\leq distance(u,v)^2$.
+Formally, MFEC-MAR-Approx is defined as follows:
 
 \begin{itemize}
- \item \textbf{Input:} A sensor network $G = (V, E)$, where $V$ is a set of fixed vertices and $E$ is the set of edges between vertices if they are within transmission range $T$, a fairness measure $\alpha$, a maximum power consumption rate $P$
-
-\item \textbf{Output:} A non-disconnected network $G' = (V \cup S, E')$ such that:
+ \item \textbf{Input:} A set of fixed sensor nodes $S$ in Euclidean space, a standard deviation $\alpha$ of power consumption rates and a maximum number of relay nodes $k$.
+\item \textbf{Output:} A connected network $G = (S \cup R, E)$ such that:
 	\begin{itemize}
-		\item $STDEV( PCR_{v \in |V \cup S|} v) \leq \alpha$
-		\item $\forall_{v \in |V \cup S|} PCR(v) \leq P$
-		\item $\sum_{v \in |V \cup S|} PCR(v)$ is minimal
-		\item $|S|$ is minimal
+		\item $R$ is the set of introduced relay nodes such that:
+		\begin{itemize}
+		\item $|R| \leq k$
+		\item $\sigma(PCR) \leq \alpha$		
+		\end{itemize}
+		\item $G$ is connected
 	\end{itemize}
 \end{itemize}
 

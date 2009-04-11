@@ -4,10 +4,10 @@
 In this section we will explain our two step approach to solving the fairness problem in WSNs.
 
 \subsubsection{Connecting Nodes}
-Given a set $T$ of n terminals which are deployed in an Euclidean plane, and a positive constant R, our aim is to find a Steiner Minimum Tree $\tau$ with minimum number of Steiner points (SMT-MSP). In 1999, Lin \textit{et al}. [13] showed that SMT-MSP is NP-Hard. In 2008, Cheng \textit{et al}. [6], presented a $O(n^{3})$-time approximations with performance ratio is at most 3. In this project we implemented Ratio-3 approximation presented in [6], to connect initially disconnected terminals. The idea behind the algorithm is simple: First we assume a fully connected undirected graph $G=(V,E)$ where $V=$ set of terminals, and $(u,v)\in E$ $\forall u,v \in V$ and $u\neq v$. Then we sort all $\frac{n\cdot(n-1)}{2}$ edges. For each subset of 3 terminals a, b and c respectively in three connected commponents, if there exists such a point $s$ within distance R, we put a 3-star $s$ which includes edges $(s,a)$, $(s,b)$, and $(s,c)$. Then for each edge where $\left|e_i\right| > R$ and $e_i$ connects two connected component, we pu the steinerized $e_i$ into $\tau$. Thus we establish the connectivity of terminals.
+Given a set $T$ of n terminals which are deployed in an Euclidean plane, and a positive constant R, our aim is to find a Steiner Minimum Tree $\tau$ with minimum number of Steiner points (SMT-MSP). In 1999, Lin \textit{et al}. \cite{308672} showed that SMT-MSP is NP-Hard. In 2008, Cheng \textit{et al}. \cite{RelaySensor}, presented a $O(n^{3})$-time approximations with performance ratio is at most 3. In this project we implemented Ratio-3 approximation presented in \cite{RelaySensor}, to connect initially disconnected terminals. The idea behind the algorithm is simple: First we assume a fully connected undirected graph $G=(V,E)$ where $V=$ set of terminals, and $(u,v)\in E$ $\forall u,v \in V$ and $u\neq v$. Then we sort all $\frac{n\cdot(n-1)}{2}$ edges. For each subset of 3 terminals a, b and c respectively in three connected components, if there exists such a point $s$ within distance R, we put a 3-star $s$ which includes edges $(s,a)$, $(s,b)$, and $(s,c)$. Then for each edge where $\left|e_i\right| > R$ and $e_i$ connects two connected component, we move the steinerized $e_i$ into $\tau$. Thus we establish the connectivity of terminals.
 
 \linesnumbered
-\begin{algorithm}
+\begin{algorithm}[htp]
 
 \dontprintsemicolon
 \SetKwData{FunctionSignature}{FairSMT}
@@ -22,19 +22,20 @@ $G' \leftarrow MakeFair(G', \alpha, k)$
 
 return $G'$\\
 }
-\caption{FairSMT\label{IR}}
+\caption{FairSMT}
+\label{FairSMT}
 \end{algorithm}
 
 
 \subsubsection{Optimizing Node Location}
-SMT-MSP provides connecitivy using minimum number of Steiner points. In some cases, the relay nodes in the resulting topology, may be too close or too far from each other. However this is not desirable, since it violates fairness of power consumption rates.  \\
+SMT-MSP provides connectivity using minimum number of Steiner points. In some cases, the relay nodes in the resulting topology, may be too close or too far from each other. However this is not desirable, since it violates fairness of power consumption rates.  \\
 
 In this section we explain an extension to the SMT problem to include a fairness measure across the network of nodes.
 The explanation will include the moving of Steiner Points to optimal locations as well as the introduction of additional resources (nodes) to achieve optimality. The discussion includes an overview of the trade-off between additional resources and  fairness and illustrates results of the optimization operations across multiple dimensions (such as minimizing the deployment of additional resources, maximizing fairness while minimizing power consumption).\\ 
 
 
 %Algorithm 2
-\begin{algorithm}[t]
+\begin{algorithm}[ht]
 
 \dontprintsemicolon
 \SetKwData{FunctionSignature}{MakeFair}
@@ -69,12 +70,13 @@ The explanation will include the moving of Steiner Points to optimal locations a
   return $(G', false)$
   }
 }
-\caption{Pseudo-code of fairness approximation\label{IR}}
+\caption{Pseudo-code of fairness approximation}
+\label{MakeFair}
 \end{algorithm}
 
 
 %Algorithm 3
-\begin{algorithm}
+\begin{algorithm}[htp]
 
 \dontprintsemicolon
 \SetKwData{FunctionSignature}{MoveRelayNodes-geometric}
@@ -91,12 +93,13 @@ The explanation will include the moving of Steiner Points to optimal locations a
      }
   }
 }
-\caption{Detailed description of MoveNodes-geometric function\label{IR}}
+\caption{Detailed description of MoveNodes-geometric function}
+\label{MoveRelayNodes-geometric}
 \end{algorithm}
 
 
 %Algorithm 4
-\begin{algorithm}
+\begin{algorithm}[htp]
 
 \dontprintsemicolon
 \SetKwData{FunctionSignature}{AddRelayNodes}
@@ -116,11 +119,12 @@ The explanation will include the moving of Steiner Points to optimal locations a
 	heap.insert$(s)$\\
 	heapify()\\
 }
-\caption{Pseudo-code of AddSteinerNodes\label{IR}}
+\caption{Pseudo-code of AddSteinerNodes}
+\label{AddRelayNodes}
 \end{algorithm}
 
 %Algorithm 5
-\begin{algorithm}
+\begin{algorithm}[htp]
 
 \dontprintsemicolon
 \SetKwData{FunctionSignature}{MoveRelayNodes}
@@ -132,18 +136,19 @@ The explanation will include the moving of Steiner Points to optimal locations a
 	\While {heap is not empty}{
 		$s \leftarrow$ heap.extractMax()\\
 		$t \leftarrow s$.getFarthestNeighbor()\\
-		// calculateLocation finds the best location $p$ which is in between $s$ and $t$, where $p$ minimizes the pcr of $s$.\\
+		// calculateLocation finds the best location $p$ which is in between $s$ and $t$, where $p$ minimizes the PCR of $s$.\\
 		$p \leftarrow $calculateLocation$(s,t)$\\
 		move$(s, p)$\\
 		heap.insert$(s)$\\
 		heapify()\\
 	}
 }
-\caption{Pseudo-code of MoveRelayNodes\label{IR}}
+\caption{Pseudo-code of MoveRelayNodes}
+\label{MoveRelayNodes}
 \end{algorithm}
 
 
-Initially, our fairness approximation algorithm calculates the power consumption rates of each relay node (PCR) and inserts the nodes to a max heap. The main loop of the MakeFair method iteratively moves and adds relay nodes until the max number relay nodes allowed, is reached. The inner while loop of Algorithm 2 (lines 8-16), invokes MoveRelayNodes-geometric function, which is described in Algorithm 3. MoveRelayNodes-geometric takes each 3-stars as defined in [6], and moves the relay nodes to the center of circle that circumscribes the 3-neighbors. Here, our aim is to provide local fairness. After moving each relay node to the center of 3-star, we extract the node which has the highest PCR, and find its farthest neighbor (see Algorithm 4). Since the longest edge determines the PCR of the node, we add an additional relay node to the middle point the longest edge. Then we add newly deployed node along with the extracted node to the heap. Deploying new node will definitely change PCRs of some set of nodes. We move each relay node to the local optimal positions. In Algorithm 5, it is seen that, the optimal location for a node $u$ is in between itself and its farthest neighbor. We calculate this location using some trigonometric functions. Then we insert $u$ to the heap and continue iteration until $\left|S\right|=k$ where $S$ is the set of relay nodes and $k$ is the maximum number of relay nodes which can be deployed.
+Initially, our fairness approximation algorithm calculates the power consumption rates of each relay node (PCR) and inserts the nodes to a max heap. The main loop of the MakeFair method iteratively moves and adds relay nodes until the max number relay nodes allowed, is reached. The inner while loop of Algorithm 2 (lines 8-16), invokes MoveRelayNodes-geometric function, which is described in Algorithm 3. MoveRelayNodes-geometric takes each 3-stars as defined in \cite{RelaySensor}, and moves the relay nodes to the center of circle that circumscribes the 3-neighbors. Here, our aim is to provide local fairness. After moving each relay node to the center of 3-star, we extract the node which has the highest PCR, and find its farthest neighbor (see Algorithm 4). Since the longest edge determines the PCR of the node, we add an additional relay node to the middle point the longest edge. Then we add newly deployed node along with the extracted node to the heap. Deploying new node will definitely change PCRs of some set of nodes. We move each relay node to the local optimal positions. In Algorithm 5, it is seen that, the optimal location for a node $u$ is in between itself and its farthest neighbor. We calculate this location using some trigonometric functions. Then we insert $u$ to the heap and continue iteration until $\left|S\right|=k$ where $S$ is the set of relay nodes and $k$ is the maximum number of relay nodes which can be deployed.
 
 
 \subsection{Theoretical Analysis}
