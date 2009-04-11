@@ -1,9 +1,9 @@
-\section{Algorithm and Analysis}\label{analysis}
+\section{Algorithm and Analysis}\label{AlgorithmAndAnalysis}
 
 \subsection{Algorithms for MFEC-MAR (Fairness in WSNs)}
 In this section we will explain our two step approach to solving the fairness problem in WSNs.
 
-\subsubsection{Connecting Nodes}
+\subsubsection{Connecting Nodes}\label{connectingNodes}
 Given a set $T$ of n terminals which are deployed in an Euclidean plane, and a positive constant R, our aim is to find a Steiner Minimum Tree $\tau$ with minimum number of Steiner points (SMT-MSP). In 1999, Lin \textit{et al}. \cite{308672} showed that SMT-MSP is NP-Hard. In 2008, Cheng \textit{et al}. \cite{RelaySensor}, presented a $O(n^{3})$-time approximations with performance ratio is at most 3. In this project we implemented Ratio-3 approximation presented in \cite{RelaySensor}, to connect initially disconnected terminals. The idea behind the algorithm is simple: First we assume a fully connected undirected graph $G=(V,E)$ where $V=$ set of terminals, and $(u,v)\in E$ $\forall u,v \in V$ and $u\neq v$. Then we sort all $\frac{n\cdot(n-1)}{2}$ edges. For each subset of 3 terminals a, b and c respectively in three connected components, if there exists such a point $s$ within distance R, we put a 3-star $s$ which includes edges $(s,a)$, $(s,b)$, and $(s,c)$. Then for each edge where $\left|e_i\right| > R$ and $e_i$ connects two connected component, we move the steinerized $e_i$ into $\tau$. Thus we establish the connectivity of terminals.
 
 \linesnumbered
@@ -27,7 +27,7 @@ return $G'$\\
 \end{algorithm}
 
 
-\subsubsection{Optimizing Node Location}
+\subsubsection{Optimizing Node Location}\label{OptimizingNodeLocation}
 SMT-MSP provides connectivity using minimum number of Steiner points. In some cases, the relay nodes in the resulting topology, may be too close or too far from each other. However this is not desirable, since it violates fairness of power consumption rates.  \\
 
 In this section we explain an extension to the SMT problem to include a fairness measure across the network of nodes.
