@@ -25,7 +25,7 @@ Tests were run 10 times each and the results were averaged for more accurate res
 
 \subsection{Results}
 
-Within reach graph, the results are separated according to the size of the canvas on which fairness was measured.  The differences are dramatic as the canvas size increases because the distance between nodes can be much greater.
+Within each graph, the results are separated according to the size of the canvas on which fairness was measured.  The differences are dramatic as the canvas size increases because the distance between nodes can be much greater.
 
 \subsection{Fairness With Varying Number of Terminal Nodes}
 
@@ -51,7 +51,7 @@ The following three graphs show the total power consumption for different number
 \end{figure}
 \end{comment}
 
-Fairness is significantly different for large canvas sizes compared to smaller ones, so in order to better illustrate the trend towards fairness as k increases on small canvases, Figure \ref{5} shows a single canvas size-100x100 pixels-graphed against an increasing k.  As expected, it depicts increasing fairness as the number of relay nodes increases.
+Fairness is significantly different for large canvas sizes compared to smaller ones, so in order to better illustrate the trend towards fairness as k increases on small canvases, Figure \ref{5} shows a single canvas size-100x100 pixels-graphed against an increasing $k$.  As expected, it depicts increasing fairness as the number of relay nodes increases.
 
 \begin{comment}
 \begin{figure}[p]
@@ -63,7 +63,7 @@ Fairness is significantly different for large canvas sizes compared to smaller o
 
 \subsection{Power Consumption}
 
-Another interesting metric is what happens to the total power consumption as surface area increases.  As explained in an earlier section, the PCR increases as distance between nodes increases.  Power consumption, therefore, decreases based on two factors: as k increases, and as the surface area decreases.  Figure \ref{6} illustrates this. 
+Another interesting metric is what happens to the total power consumption as surface area increases.  As explained in an earlier section, the $PCR$ increases as distance between nodes increases.  Power consumption, therefore, decreases based on two factors: as $k$ increases, and as the surface area decreases.  Figure \ref{6} illustrates this. 
 
 \begin{comment}
 \begin{figure}[p]
@@ -73,7 +73,7 @@ Another interesting metric is what happens to the total power consumption as sur
 \end{figure}
 \end{comment}
 
-Total power consumption, however, is less important in the context of this paper.  More important is fairness.  To illustrate fairness in power consumption, Figure \ref{7} shows the power consumption per node on a 300x300 pixel canvas, with 20 terminal nodes, graphed as k increases.  When k is low, there is little to be done to make the network fair.  By contrast, as k increases, the maximum, average, and minimum power consumption per node start to converge. 
+Total power consumption, however, is less important in the context of this paper.  More important is fairness.  To illustrate fairness in power consumption, Figure \ref{7} shows the power consumption per node on a 300x300 pixel canvas, with 20 terminal nodes, graphed as k increases.  When $k$ is low, there is little to be done to make the network fair.  By contrast, as $k$ increases, the maximum, average, and minimum power consumption per node start to converge. 
 
 \begin{comment}
 \begin{figure}[p]
@@ -85,9 +85,9 @@ Total power consumption, however, is less important in the context of this paper
 
 \subsection{Interpretation of Results}
 
-Unfortunately, the authors of this paper could not find literature studying fairness.  Consequently, it is difficult to compare the findings of this paper against some previous standard.  This section, therefore, will not compare its results with other papers.  The results of experimenting, however, do meet expectations: as relay nodes are added, fairness increases.  This is little help ultimately, as it naively implies that k should increase indefinitely.  Clearly this cannot happen: if k approaches some very large number, the sensor network might as well be wired!  The problem, then, is to find a good cutoff for k.
+Unfortunately, the authors of this paper could not find literature studying fairness.  Consequently, it is difficult to compare the findings of this paper against some previous standard.  This section, therefore, will not compare its results with other papers.  The results of experimenting, however, do meet expectations: as relay nodes are added, fairness increases.  This is little help ultimately, as it naively implies that k should increase indefinitely.  Clearly this cannot happen: if $k$ approaches some very large number, the sensor network might as well be wired!  The problem, then, is to find a good cutoff for $k$.
 
-\subsection{Optimal K Value}
+\subsection{Optimal $k$ Value}
 
-Optimal k values change based on the number of terminal nodes and the surface area of the sensor network.  The graphs above and the rest of the data from experimentation show that there are very significant gains in fairness as k increases from 0 regardless of the number of terminal nodes and surface area.   For networks in a small surface area, for example 100x100 to 300x300, fairness shows little gain after k reaches 8 to 12 relay nodes, depending on the number of terminal nodes.  The graphs start to level off earlier when the number of terminal nodes is high, while fewer terminal nodes result in more relay nodes to reach approximate fairness.  Larger surface areas exhibit the same behavior, but require larger k values before leveling off.  Although there isn't a single optimal k value that fits all applications, the important aspect of the fairness is that results tend to be consistent: as k increases, fairness increases, and as surface area decreases, fairness also increases.
-The optimal k value, therefore, should be found experimentally, given the practical constraints of the network and application.  For instance, if the surface area of the sensor network is very small, the optimal k value will very likely be lower than a network with double the surface area.
+Optimal $k$ values change based on the number of terminal nodes and the surface area of the sensor network.  The graphs above and the rest of the data from experimentation show that there are very significant gains in fairness as $k$ increases from 0 regardless of the number of terminal nodes and surface area.   For networks in a small surface area, for example 100x100 to 300x300, fairness shows little gain after $k$ reaches 8 to 12 relay nodes, depending on the number of terminal nodes.  The graphs start to level off earlier when the number of terminal nodes is high, while fewer terminal nodes result in more relay nodes to reach approximate fairness.  Larger surface areas exhibit the same behavior, but require larger $k$ values before leveling off.  Although there isn't a single optimal $k$ value that fits all applications, the important aspect of the fairness is that results tend to be consistent: as $k$ increases, fairness increases, and as surface area decreases, fairness also increases.
+The optimal $k$ value, therefore, should be found experimentally, given the practical constraints of the network and application.  For instance, if the surface area of the sensor network is very small, the optimal $k$ value will very likely be lower than a network with double the surface area.
