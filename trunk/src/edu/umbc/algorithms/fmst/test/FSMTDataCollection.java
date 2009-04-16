@@ -15,6 +15,7 @@ import edu.umbc.algorithms.fmst.util.GraphUtils;
 public class FSMTDataCollection {
 	private static final Logger log = Logger.getLogger(FSMTDataCollection.class);
 	public static final String HEADER = "run num	std dev	max pcr	min pcr	avg pcr	total pcr	num terminal	k	target pcr";
+
 	/**
 	 * creates a fair smt with the given parameters.
 	 * 
