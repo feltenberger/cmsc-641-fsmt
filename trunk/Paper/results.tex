@@ -6,7 +6,7 @@ To summarize succinctly: maximizing fairness with restrictions on the number of 
 
 \subsection{Methodology}
 
-Tests were performed using the Java programming language and a freely available implementation of the Steiner Minimum Tree (SMT) algorithm found on the Internet\footnote{\url{http://www.nirarebakun.com/}}.  This implementation was extended to include support for fairness.   Figure \ref{1} shows a sample of what a graph looks like.  Notice the key at the top, showing the standard deviation of power consumption (i.e. fairness), as well as various other important measurements.  White points denote ``terminal'', i.e. non-movable, nodes in the sensor network.  Red points are Steiner-or, relay-nodes.  Relay nodes are added to the graph during the creation of the SMT as well as during the procedure to approximately equalize fairness.  Relay nodes can be moved in any direction.
+Tests were performed using the Java programming language and a freely available implementation of the Steiner Minimum Tree (SMT) algorithm found on the Internet \cite{JAVAAPP}.  This implementation was extended to include support for fairness.   Figure \ref{1} shows a sample of what a graph looks like.  Notice the key at the top, showing the standard deviation of power consumption (i.e. fairness), as well as various other important measurements.  White points denote ``terminal'', i.e. non-movable, nodes in the sensor network.  Red points are Steiner-or, relay-nodes.  Relay nodes are added to the graph during the creation of the SMT as well as during the procedure to approximately equalize fairness.  Relay nodes can be moved in any direction.
 
 \begin{figure}[htp]
 \includegraphics[scale=0.405]{images/1.PNG}
@@ -85,7 +85,7 @@ Total power consumption, however, is less important in the context of this paper
 
 \subsection{Interpretation of Results}
 
-Unfortunately, the authors of this paper could not find literature studying fairness.  Consequently, it is difficult to compare the findings of this paper against some previous standard.  This section, therefore, will not compare its results with other papers.  The results of experimenting, however, do meet expectations: as relay nodes are added, fairness increases.  This is little help ultimately, as it naively implies that k should increase indefinitely.  Clearly this cannot happen: if $k$ approaches some very large number, the sensor network might as well be wired!  The problem, then, is to find a good cutoff for $k$.
+The authors of this paper could not find literature studying fairness.  It is difficult to compare the findings of this paper against some previous standard.  This section, therefore, will not compare its results with other papers.  The results of experimenting, however, do meet expectations: as relay nodes are added, fairness increases.  This is little help ultimately, as it naively implies that k should increase indefinitely.  Clearly this cannot happen: if $k$ approaches some very large number, the sensor network might as well be wired!  The problem, then, is to find a good cutoff for $k$.
 
 \subsection{Optimal $k$ Value}
 

@@ -19,7 +19,11 @@ The model and algorithms described in this paper make the following assumptions:
 
 \subsection{Problem Formulation}
 
-We formulate the Minimal Fair Energy Consumption with Minimal Additional Resources (MFEC-MAR) problem as follows: Given a set of fixed sensor nodes $S$, find a minimal set of relay sensor nodes $R$ such that the power consumption rate $PCR$ is equal for each node $v \in \{S \cup R\}$, that is $\forall_{i=0}^{n=|S \cup R|} PCR(v_i) = PCR(v_2)=...=PCR(v_n)$ The induced graph $G=(S \cup R,E)$ must be connected, where an edge $(u,v) \in E$ if $u$ is within transmission range $T_v$ of $v$ and $v$ is within transmission range $T_u$ of $u$. A node $u$ is within transmission range of $v$ if  $PCR(u)\leq distance(u,v)^2$.
+We formulate the Minimal Fair Energy Consumption with Minimal Additional Resources (MFEC-MAR) problem as follows: Given a set of fixed sensor nodes $S$, find a minimal set of relay sensor nodes $R$ such that the power consumption rate $PCR$ is equal for each node $v \in \{S \cup R\}$, that is:
+\begin{equation*}
+\forall_{i=0}^{n=|S \cup R|} PCR(v_i) = PCR(v_2)=...=PCR(v_n).
+\end{equation*}
+The induced graph $G=(S \cup R,E)$ must be connected, where an edge $(u,v) \in E$ if $u$ is within transmission range $T_v$ of $v$ and $v$ is within transmission range $T_u$ of $u$. A node $u$ is within transmission range of $v$ if  $PCR(u)\leq distance(u,v)^2$.
 Formally, MFEC-MAR is defined as follows:
 \begin{itemize}
  \item \textbf{Input:} A set of fixed sensor nodes $S$ in Euclidean space.
